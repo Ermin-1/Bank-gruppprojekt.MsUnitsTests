@@ -12,7 +12,7 @@ namespace Bank_gruppprojekt
         {
 
         }
-        public void PrintBank()
+        public void PaintBank()
         {
             Console.ForegroundColor = ConsoleColor.Black;            
             Console.WriteLine("         _._._                       _._._");

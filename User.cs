@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    internal class User
-    {
-        private string CurrentlyLoggedIn;
-        private Dictionary<string, string> logIn;
-        private int maxAttempts;
-        private int Attempts;
-        private Dictionary<string, int> userInfo = new Dictionary<string, int>
+    public class User
+    {              
+        public int maxAttempts;
+        public int Attempts;
+        public string UserName;
+        public Dictionary<string, int> userInfo = new Dictionary<string, int>
         {
             {"Ermin", 1},
             {"Ludwig", 2},
@@ -25,48 +24,9 @@ namespace Bank_gruppprojekt
 
         public User()
         {
+            UserName = "";
             maxAttempts = 3;
             Attempts = 0;
-        }
-
-        public void Runlogin()
-        {
-            AviciiBank.BankArt();
-            Console.WriteLine("Välkommen till Nordea");
-            if (PerformLogin())
-            {
-                Console.WriteLine("Inloggning lyckades! king kong!!");
-            }
-            else
-            {
-                Console.WriteLine("Du har försökt för många gånger. Programmet kommer nu att avslutas! Noob");
-                Thread.Sleep(1000);
-                Environment.Exit(0);
-            }
-        }
-
-        private bool PerformLogin()
-        {
-            while (Attempts < maxAttempts)
-            {
-                Console.WriteLine("Ange användarnamn: ");
-                string username = Console.ReadLine();
-                Console.WriteLine("Ange pinkod: ");
-                int password = Convert.ToInt32(Console.ReadLine());
-                if (userInfo.ContainsKey(username) && userInfo[username] == password)
-                {
-                    Console.WriteLine("Du loggas nu in...");
-                    CurrentlyLoggedIn = username;
-                    return true;
-                }
-                else
-                {
-                    Attempts++;
-                    Console.WriteLine($"Antal försök kvar: {maxAttempts - Attempts}");
-                     
-                }
-            }
-            return false;
         }
     }
 }

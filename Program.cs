@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            new User().Runlogin();
+            new Bank().Runlogin();
         }      
     }
 }

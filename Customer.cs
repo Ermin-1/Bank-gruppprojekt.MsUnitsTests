@@ -79,8 +79,7 @@ namespace Bank_gruppprojekt
 
         public static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
         {
-            Console.WriteLine("Enter the username of the target user: ");
-            string targetUsername = Console.ReadLine();
+
         }
 
 
@@ -141,7 +140,122 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine("Account doesn't exist. Please choose a number of accounts that match the list.");
                 }
+
+
+            static void TransferMoney() // Funktion för att konvertera valutor på olika konton till ett och samma
+            {
+                    // Hämtar användarens index i arrayen Användare baserat på det inloggade användarnamnet inloggadSom. 
+                    int användarIndex = Array.IndexOf(Användare, inloggadSom);
+
+                    // går igenom arrayen KontoNamn med placering av användarIndex ( den inloggade ) och skrivs sedan ut. 
+                    // i + 1 används för att tilldela första kontot värdet 1 och inte 0. 
+                    Console.WriteLine("Dina konton:");
+                    for (int i = 0; i < KontoNamn[användarIndex].Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {KontoNamn[användarIndex][i]}");
+                    }
+
+                    Console.Write("Välj konto att överföra pengar från (ange siffran): ");
+                    int frånKonto = int.Parse(Console.ReadLine());
+
+                    // Om frånKonto är ett giltligt heltal och inom intervallet mellan 1 och antal konto i indexet forstter den in i if-satsen
+                    if (frånKonto >= 1 && frånKonto <= KontoNamn[användarIndex].Length)
+                    {
+                        // beräknas med minus 1 på från konto eftersom användarens val är numrerat från 1 i menyn, men array-indexeringen börjar från 0.
+                        int frånKontoIndex = frånKonto - 1;
+
+                        Console.Write("Välj konto att överföra pengar till (ange siffran): ");
+                        int tillKonto = int.Parse(Console.ReadLine());
+
+                        // Kontrollerar om tillKonto existrerar i indexet
+                        if (tillKonto >= 1 && tillKonto <= KontoNamn[användarIndex].Length)
+                        {
+                            // Samma sätt som tidigare beräknas index för det valda mottagande kontot genom att ta bort 1 från användarens inmatning.
+                            int tillKontoIndex = tillKonto - 1;
+
+                            Console.Write("Ange belopp att överföra: ");
+                            decimal överföringsBelopp = decimal.Parse(Console.ReadLine());
+                            if (överföringsBelopp > 0)
+                            {
+                                // Kontrollerar om det finns tillräckligt med saldo på avsändande konto
+                                if (KontoSaldo[användarIndex][frånKontoIndex] >= överföringsBelopp)
+                                {
+                                    // Utför överföringen och uppdaterar saldon
+                                    KontoSaldo[användarIndex][frånKontoIndex] -= överföringsBelopp;
+                                    KontoSaldo[användarIndex][tillKontoIndex] += överföringsBelopp;
+                                    Console.WriteLine("");
+                                    Console.WriteLine($"{överföringsBelopp:C} har överförts från {KontoNamn[användarIndex][frånKontoIndex]} till {KontoNamn[användarIndex][tillKontoIndex]}.");
+                                    Console.WriteLine($"Nytt saldo för {KontoNamn[användarIndex][frånKontoIndex]}: {KontoSaldo[användarIndex][frånKontoIndex]:C}");
+                                    Console.WriteLine($"Nytt saldo för {KontoNamn[användarIndex][tillKontoIndex]}: {KontoSaldo[användarIndex][tillKontoIndex]:C}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Otillräckligt saldo på det valda kontot för att genomföra överföringen.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Ogiltigt belopp. Ange ett positivt decimaltal.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ogiltigt kontoval för mottagande konto. Ange en siffra som motsvarar ett av dina konton.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ogiltigt kontoval för avsändande konto. Ange en siffra som motsvarar ett av dina konton.");
+                    }
+                    Console.WriteLine("");
+                }
+
             }
+
+        static void ShowAccounts()
+        {
+
+            // Hitta användarens index baserat på inloggadSom i arrayen KontoÄgare.
+            int AnvändarIndex = Array.LastIndexOf(KontoÄgare, inloggadSom);
+
+
+            Console.WriteLine($"Konton och saldo för {inloggadSom}:");
+            Console.WriteLine("");
+
+            // Loopar igenom användarens konton genom ovan angivet AnvändarIndex och skriver ut kontonamn och saldo.
+            // :C tillagt för att skriva ut som valuta kr.
+            for (int i = 0; i < KontoNamn[AnvändarIndex].Length; i++)
+            {
+
+                Console.WriteLine($"{KontoNamn[AnvändarIndex][i]}: {KontoSaldo[AnvändarIndex][i]:C}");
+            }
+
+
+            static void TransferToOthers() // Funktion för att överföra pengar till ANDRA användare
+            {
+
+            }
+
+            static void HistoryTransfers() 
+            {
+
+            }
+
+            static void OpenNewIntrestAccount() 
+            {
+
+            }
+
+            static void OpenNewAccount()
+            {
+
+            }
+
+            static void CurrencyConvertion()
+            {
+
+            }
+
         }
     }
 }

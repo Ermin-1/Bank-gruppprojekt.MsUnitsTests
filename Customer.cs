@@ -17,7 +17,7 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("Your accounts:");
                 for (int i = 0; i < accountTypes.Length; i++) // Körs för att kolla vilka olika kontotyper användaren har.
                 {
-                    Console.WriteLine($"{i + 1}. {accountTypes[i]}: {balances[userBalanceIndex + i]}$"); // Loopen visar vilka konton användaren har och saldot i dem.
+                    Console.WriteLine($"{i + 1}. {accountTypes[i]}: {balances[userBalanceIndex + i]}$"); // Loopen visar vilka konton användaren har och saldot i dem
                 }
 
                 Console.Write("Select the account to transfer from (Enter the number): ");

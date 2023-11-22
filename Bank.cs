@@ -8,5 +8,10 @@ namespace Bank_gruppprojekt
 {
     internal class Bank
     {
-    }
+        public static void BankArt()
+        {
+            ASCIIBankArt art = new ASCIIBankArt();
+            art.PaintBank();
+        }
+    }    
 }

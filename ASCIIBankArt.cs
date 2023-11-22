@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    internal class ASCIIBankArt
+    internal class AviciiBank
     {
-        public ASCIIBankArt()
+        public AviciiBank()
         {
 
         }
         public void PaintBank()
-        {
-            Console.ForegroundColor = ConsoleColor.Black;            
+        {                      
             Console.WriteLine("         _._._                       _._._");
             Console.WriteLine("        _|   |_                     _|   |_");
             Console.WriteLine("        | ... |_._._._._._._._._._._| ... |");
@@ -28,6 +27,11 @@ namespace Bank_gruppprojekt
             Console.WriteLine("    ||  |_____|_|_|_|__|_|_|__|_|_|_|_____|  ||");
             Console.WriteLine(" ~ ~^^ @@@@@@@@@@@@@@/=======\\@@@@@@@@@@@@@@ ^^~ ~");
             Console.WriteLine("      ^~^~                                ~^~^");
+        }
+        public static void BankArt()
+        {
+            AviciiBank art = new AviciiBank();
+            art.PaintBank();
         }
     }   
 }

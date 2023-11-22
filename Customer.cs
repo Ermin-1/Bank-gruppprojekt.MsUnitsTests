@@ -8,78 +8,31 @@ namespace Bank_gruppprojekt
 {
     public class Customer : User
     {
-        public static void TransferMoney(string username, string[] accountTypes, int currentUserIndex, double[] balances) // Funktion för att överföra pengar mellan DINA konton.
+
+        public class Program
         {
-            if (currentUserIndex >= 0) // Vilkor som kontrollerar om en användare är inloggad eller inte, är det större eller lika med 0 så är en giltig användare inloggad.
-            {
-                int userBalanceIndex = currentUserIndex * accountTypes.Length; // Beräknar indexet i användarens saldo i "balances arrayen".
-
-                Console.WriteLine("Your accounts:");
-                for (int i = 0; i < accountTypes.Length; i++) // Körs för att kolla vilka olika kontotyper användaren har.
-                {
-                    Console.WriteLine($"{i + 1}. {accountTypes[i]}: {balances[userBalanceIndex + i]}$"); // Loopen visar vilka konton användaren har och saldot i dem.
-                }
-
-                Console.Write("Select the account to transfer from (Enter the number): ");
-                int sourceAccountIndex = Convert.ToInt32(Console.ReadLine()) - 1; // Sparar ner inmatningen i "sourceAccountIndex"dvs källan, måste ta bort -1 då kontonumret är 1 men arrayer använder basindex 0.
-
-                if (sourceAccountIndex >= 0 && sourceAccountIndex < accountTypes.Length) // Kontrollerar om det valda kontot är giltigt genom index.
-                {
-                    Console.Write("Enter the amount to transfer: ");
-                    double amountToTransfer = Convert.ToDouble(Console.ReadLine()); // Sparar ner inmatning som ska överföras, konverteras till double för att kunna ta decimaler.
-
-                    if (amountToTransfer <= balances[userBalanceIndex + sourceAccountIndex]) // Kontrollerar om det finns tillräckligt med saldo
-                    {
-                        Console.WriteLine("Your account for transfer:");
-                        for (int i = 0; i < accountTypes.Length; i++) // Visar de konton som finns att överföra till.
-                        {
-                            if (i != sourceAccountIndex) // Villkor som kollar så inte kontoindex är samma som sourceAccountIndex.
-                            {
-                                Console.WriteLine($"{i + 1}. {accountTypes[i]}");
-                            }
-                        }
-                        Console.Write("Select the account to transfer to (Enter the number): ");
-                        int targetAccountIndex = Convert.ToInt32(Console.ReadLine()) - 1; // Sparar ner inmatningen i "targetAccountIndex" dvs mottagare, måste ta bort -1 då kontonumret är 1 men arrayer använder basindex 0.
-
-                        if (targetAccountIndex >= 0 && targetAccountIndex < accountTypes.Length) // Kontrollerar om det valda kontot är giltigt, för att se om index är större eller lika med 0
-                        {
-                            balances[userBalanceIndex + sourceAccountIndex] -= amountToTransfer; // Här genomförs överföringen om alla villkor uppfylls.
-                            balances[userBalanceIndex + targetAccountIndex] += amountToTransfer;
-
-                            Console.WriteLine($"Transfer of {amountToTransfer}$ from {accountTypes[sourceAccountIndex]} to {accountTypes[targetAccountIndex]} completed.");
-
-                            Console.WriteLine("Your updated balances:");
-                            for (int i = 0; i < accountTypes.Length; i++)
-                            {
-                                Console.WriteLine($"{accountTypes[i]}: {balances[userBalanceIndex + i]}$"); // Skriver ut kontot samt saldot som användaren har och sammanfattar efter överföringen
-                            }
-                        }
-                        else // Hela sista delen hanterar olika scenarior vid fel med källkonto, mottagarkonto eller överförningsbelopp.
-                        {
-                            Console.WriteLine("Invalid target account selection.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"You do not have enough funds in your {accountTypes[sourceAccountIndex]} account.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid source account selection.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No accounts found for this user.");
-            }
-        }
-        // Behöver ändra namn på mycket beroende på lista med användarnamn/pinkoder osv samt inloggningsmetod.
-
-        static void Withdrawl()
+            static List<List<string>> ACCOUNTNAME = new List<List<string>>
         {
+            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto", "Rainyday-fun" },
+            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto" },
+            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto" },
+            new List<string> { "Lönekonto", "Sparkonto" },
+
+        };
+
+            static List<List<decimal>> ACCOUNTBALANCE = new List<List<decimal>>
+        {
+            new List<decimal> { 27500.0m, 300000.0m, 50000.0m, 20000.0m, 100000.0m },
+            new List<decimal> { 42000.0m, 200000.0m, 150000.0m, 60000.0m },
+            new List<decimal> { 25000.0m, 46000.0m, 450000.0m },
+            new List<decimal> { 15000.0m, 10000.0m },
+
+        };
+
+            static void Withdrawal()
+            {
                 // Search the list for the user to get the index number
-                int userIndex = USER.IndexOf(CURRENTYLOGGEDIN);
+                int userIndex = userInfo.IndexOf(CurrentlyLoggedIn);
 
                 // Search through the list ACCOUNTNAME within userindex (CurrentLoggedIn). +1 adds to declare the first account number one and not index 0.
                 Console.WriteLine("Your accounts:");
@@ -106,9 +59,9 @@ namespace Bank_gruppprojekt
                         if (ACCOUNTBALANCE[userIndex][accIndex] >= moneyToWithdraw)
                         {
                             // Deduct the withdrawal amount from the account balance and print the confirmation.
-                           ACCOUNTBALANCE[userIndex][accIndex] -= moneyToWithdraw;
+                            ACCOUNTBALANCE[userIndex][accIndex] -= moneyToWithdraw;
                             Console.WriteLine($"{moneyToWithdraw:C} has been withdrawn from {ACCOUNTNAME[userIndex][accIndex]}.");
-                            Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][accIndex]}: {KontoSaldo[userIndex][accIndex]:C}");
+                            Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][accIndex]}: {ACCOUNTBALANCE[userIndex][accIndex]:C}");
                         }
                         else
                         {
@@ -124,122 +77,119 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine("Account doesn't exist. Please choose a number of accounts that match the list.");
                 }
+            }
 
-
-            static void TransferMoney() // Funktion för att konvertera valutor på olika konton till ett och samma
+            static void TransferMoney()
             {
-                    // Hämtar användarens index i arrayen Användare baserat på det inloggade användarnamnet inloggadSom. 
-                    int användarIndex = Array.IndexOf(Användare, inloggadSom);
+                // Get the index of the currently logged-in user
+                int userIndex = Användare.IndexOf(CurrentlyLoggedIn);
 
-                    // går igenom arrayen KontoNamn med placering av användarIndex ( den inloggade ) och skrivs sedan ut. 
-                    // i + 1 används för att tilldela första kontot värdet 1 och inte 0. 
-                    Console.WriteLine("Dina konton:");
-                    for (int i = 0; i < KontoNamn[användarIndex].Length; i++)
+                // Display the user's accounts
+                Console.WriteLine("Your accounts:");
+                for (int i = 0; i < ACCOUNTNAME[userIndex].Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {ACCOUNTNAME[userIndex][i]}");
+                }
+
+                Console.Write("Choose the account to transfer money from (enter the number): ");
+                int fromAccount = int.Parse(Console.ReadLine());
+
+                if (fromAccount >= 1 && fromAccount <= ACCOUNTNAME[userIndex].Count)
+                {
+                    int fromAccountIndex = fromAccount - 1;
+
+                    Console.Write("Choose the account to transfer money to (enter the number): ");
+                    int toAccount = int.Parse(Console.ReadLine());
+
+                    if (toAccount >= 1 && toAccount <= ACCOUNTNAME[userIndex].Count)
                     {
-                        Console.WriteLine($"{i + 1}. {KontoNamn[användarIndex][i]}");
-                    }
+                        int toAccountIndex = toAccount - 1;
 
-                    Console.Write("Välj konto att överföra pengar från (ange siffran): ");
-                    int frånKonto = int.Parse(Console.ReadLine());
+                        Console.Write("Enter the amount to transfer: ");
+                        decimal transferAmount = decimal.Parse(Console.ReadLine());
 
-                    // Om frånKonto är ett giltligt heltal och inom intervallet mellan 1 och antal konto i indexet forstter den in i if-satsen
-                    if (frånKonto >= 1 && frånKonto <= KontoNamn[användarIndex].Length)
-                    {
-                        // beräknas med minus 1 på från konto eftersom användarens val är numrerat från 1 i menyn, men array-indexeringen börjar från 0.
-                        int frånKontoIndex = frånKonto - 1;
-
-                        Console.Write("Välj konto att överföra pengar till (ange siffran): ");
-                        int tillKonto = int.Parse(Console.ReadLine());
-
-                        // Kontrollerar om tillKonto existrerar i indexet
-                        if (tillKonto >= 1 && tillKonto <= KontoNamn[användarIndex].Length)
+                        if (transferAmount > 0)
                         {
-                            // Samma sätt som tidigare beräknas index för det valda mottagande kontot genom att ta bort 1 från användarens inmatning.
-                            int tillKontoIndex = tillKonto - 1;
-
-                            Console.Write("Ange belopp att överföra: ");
-                            decimal överföringsBelopp = decimal.Parse(Console.ReadLine());
-                            if (överföringsBelopp > 0)
+                            if (ACCOUNTBALANCE[userIndex][fromAccountIndex] >= transferAmount)
                             {
-                                // Kontrollerar om det finns tillräckligt med saldo på avsändande konto
-                                if (KontoSaldo[användarIndex][frånKontoIndex] >= överföringsBelopp)
-                                {
-                                    // Utför överföringen och uppdaterar saldon
-                                    KontoSaldo[användarIndex][frånKontoIndex] -= överföringsBelopp;
-                                    KontoSaldo[användarIndex][tillKontoIndex] += överföringsBelopp;
-                                    Console.WriteLine("");
-                                    Console.WriteLine($"{överföringsBelopp:C} har överförts från {KontoNamn[användarIndex][frånKontoIndex]} till {KontoNamn[användarIndex][tillKontoIndex]}.");
-                                    Console.WriteLine($"Nytt saldo för {KontoNamn[användarIndex][frånKontoIndex]}: {KontoSaldo[användarIndex][frånKontoIndex]:C}");
-                                    Console.WriteLine($"Nytt saldo för {KontoNamn[användarIndex][tillKontoIndex]}: {KontoSaldo[användarIndex][tillKontoIndex]:C}");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Otillräckligt saldo på det valda kontot för att genomföra överföringen.");
-                                }
+                                ACCOUNTBALANCE[userIndex][fromAccountIndex] -= transferAmount;
+                                ACCOUNTBALANCE[userIndex][toAccountIndex] += transferAmount;
+
+                                Console.WriteLine("");
+                                Console.WriteLine($"{transferAmount:C} has been transferred from {ACCOUNTNAME[userIndex][fromAccountIndex]} to {ACCOUNTNAME[userIndex][toAccountIndex]}.");
+                                Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][fromAccountIndex]}: {ACCOUNTBALANCE[userIndex][fromAccountIndex]:C}");
+                                Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][toAccountIndex]}: {ACCOUNTBALANCE[userIndex][toAccountIndex]:C}");
                             }
                             else
                             {
-                                Console.WriteLine("Ogiltigt belopp. Ange ett positivt decimaltal.");
+                                Console.WriteLine("Insufficient funds in the selected account to complete the transfer.");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltigt kontoval för mottagande konto. Ange en siffra som motsvarar ett av dina konton.");
+                            Console.WriteLine("Invalid amount. Please enter a positive decimal value.");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Ogiltigt kontoval för avsändande konto. Ange en siffra som motsvarar ett av dina konton.");
+                        Console.WriteLine("Invalid selection for the receiving account. Please enter a number corresponding to one of your accounts.");
                     }
-                    Console.WriteLine("");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid selection for the sending account. Please enter a number corresponding to one of your accounts.");
+                }
+
+                Console.WriteLine("");
+            }
+
+            static void ShowAccounts()
+            {
+
+                // Hitta användarens index baserat på inloggadSom i arrayen KontoÄgare.
+                int AnvändarIndex = Array.LastIndexOf(KontoÄgare, inloggadSom);
+
+
+                Console.WriteLine($"Konton och saldo för {inloggadSom}:");
+                Console.WriteLine("");
+
+                // Loopar igenom användarens konton genom ovan angivet AnvändarIndex och skriver ut kontonamn och saldo.
+                // :C tillagt för att skriva ut som valuta kr.
+                for (int i = 0; i < KontoNamn[AnvändarIndex].Length; i++)
+                {
+
+                    Console.WriteLine($"{KontoNamn[AnvändarIndex][i]}: {KontoSaldo[AnvändarIndex][i]:C}");
+                }
+
+
+                static void TransferToOthers() // Funktion för att överföra pengar till ANDRA användare
+                {
+
+                }
+
+                static void HistoryTransfers()
+                {
+
+                }
+
+                static void OpenNewIntrestAccount()
+                {
+
+                }
+
+                static void OpenNewAccount()
+                {
+
+                }
+
+                static void CurrencyConvertion()
+                {
+
                 }
 
             }
-
-        static void ShowAccounts()
-        {
-
-            // Hitta användarens index baserat på inloggadSom i arrayen KontoÄgare.
-            int AnvändarIndex = Array.LastIndexOf(KontoÄgare, inloggadSom);
-
-
-            Console.WriteLine($"Konton och saldo för {inloggadSom}:");
-            Console.WriteLine("");
-
-            // Loopar igenom användarens konton genom ovan angivet AnvändarIndex och skriver ut kontonamn och saldo.
-            // :C tillagt för att skriva ut som valuta kr.
-            for (int i = 0; i < KontoNamn[AnvändarIndex].Length; i++)
-            {
-
-                Console.WriteLine($"{KontoNamn[AnvändarIndex][i]}: {KontoSaldo[AnvändarIndex][i]:C}");
-            }
-
-
-            static void TransferToOthers() // Funktion för att överföra pengar till ANDRA användare
-            {
-
-            }
-
-            static void HistoryTransfers() 
-            {
-
-            }
-
-            static void OpenNewIntrestAccount() 
-            {
-
-            }
-
-            static void OpenNewAccount()
-            {
-
-            }
-
-            static void CurrencyConvertion()
-            {
-
-            }
-
         }
+
     }
 }
+

@@ -9,6 +9,20 @@ namespace Bank_gruppprojekt
     public class Customer : User
     {
 
+
+        public static void TransferMoney(string username, string[] accountTypes, int currentUserIndex, double[] balances) // Funktion för att överföra pengar mellan DINA konton.
+        {
+            if (currentUserIndex >= 0) // Vilkor som kontrollerar om en användare är inloggad eller inte, är det större eller lika med 0 så är en giltig användare inloggad.
+            {
+                int userBalanceIndex = currentUserIndex * accountTypes.Length; // Beräknar indexet i användarens saldo i "balances arrayen".
+
+                Console.WriteLine("Your accounts:");
+                for (int i = 0; i < accountTypes.Length; i++) // Körs för att kolla vilka olika kontotyper användaren har.
+                {
+                    Console.WriteLine($"{i + 1}. {accountTypes[i]}: {balances[userBalanceIndex + i]}$"); // Loopen visar vilka konton användaren har och saldot i dem
+                }
+
+
         public class Program
         {
             static List<List<string>> ACCOUNTNAME = new List<List<string>>
@@ -31,6 +45,31 @@ namespace Bank_gruppprojekt
 
             static void Withdrawal()
             {
+
+                Console.WriteLine("No accounts found for this user.");
+            }
+        }
+        // Behöver ändra namn på mycket beroende på lista med användarnamn/pinkoder osv samt inloggningsmetod.
+
+
+        public static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
+        {
+
+        }
+
+
+        public static void CurrencyConvertion() // Funktion för att konvertera valutor på olika konton till ett och samma
+        {
+
+        }
+
+
+    }
+    static void Withdrawl()
+        {
+            static void Withdrawl()
+            {
+
                 // Search the list for the user to get the index number
                 int userIndex = userInfo.IndexOf(CurrentlyLoggedIn);
 

@@ -4,8 +4,7 @@
     {
         static void Main(string[] args)
         {
-            AviciiBank.BankArt();
-            Console.WriteLine("hej");
+            new User().Runlogin();
         }      
     }
 }

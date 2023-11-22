@@ -79,7 +79,8 @@ namespace Bank_gruppprojekt
 
         public static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
         {
-
+            Console.WriteLine("Enter the username of the target user: ");
+            string targetUsername = Console.ReadLine();
         }
 
 

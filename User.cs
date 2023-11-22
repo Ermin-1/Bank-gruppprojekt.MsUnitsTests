@@ -25,14 +25,6 @@ namespace Bank_gruppprojekt
 
         public User()
         {
-            logIn = new Dictionary<string, string>
-        {
-            {"Oskar","1122"},
-            {"sac","1133"},
-            {"Ludwig","1996"},
-            {"Ermin","6969"}
-
-        };
             maxAttempts = 3;
             Attempts = 0;
         }

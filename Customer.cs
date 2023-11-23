@@ -10,7 +10,7 @@ namespace Bank_gruppprojekt
     public class Customer : User
     {
 
-        public Customer(string userName, string passWord, string accountOwner) : base(userName, passWord, accountOwner)
+        public Customer(string userName, string passWord, string accountOwner, List<List<string>> accountName) : base(userName, passWord, accountOwner, accountName)
         {
             if (userList == null)
             {

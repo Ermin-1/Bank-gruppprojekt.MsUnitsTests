@@ -61,6 +61,7 @@ namespace Bank_gruppprojekt
                 if (user != null && user.Username == userName && user.Password == passWord)
                 {
                     return user; 
+
                 }
             }
             return null;

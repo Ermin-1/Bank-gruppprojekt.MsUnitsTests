@@ -86,7 +86,8 @@ namespace Bank_gruppprojekt
                         break;
 
                     case 3:
-
+                        Customer customerObj = new Customer("username", "password", "accountOwner");
+                        customerObj.Withdrawal();
                         break;
 
                     case 4:

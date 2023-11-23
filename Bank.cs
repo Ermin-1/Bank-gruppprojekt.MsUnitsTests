@@ -6,24 +6,32 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    internal class Bank : User
+    public class Bank : User
     {
-        
-        public Bank()
+        public int maxAttempts;
+        public int Attempts;
+
+        public Bank(string userName, string passWord, string accountOwner): base(userName, passWord, accountOwner)
         {
+            Username = userName;
+            Password = passWord;
+            AccountOwner = accountOwner;
             maxAttempts = 3;
             Attempts = 0;            
         }
 
         public void Runlogin()
         {
+            
             AviciiBank.BankArt();
             Console.WriteLine("Välkommen till Nordea");
-            if (PerformLogin())
+            User currentUser = null;
+            if (PerformLogin(userList, out currentUser))
             {
                 Console.WriteLine("Inloggning lyckades! king kong!!");
-                Bankmeny();
-
+                Thread.Sleep(2500);
+                Console.Clear();
+                Bankmeny(currentUser);
             }
             else
             {
@@ -32,34 +40,36 @@ namespace Bank_gruppprojekt
                 Environment.Exit(0);
             }
         }
-
-        public bool PerformLogin()
+        public bool PerformLogin(List<User> userList, out User authenticatedUser)
         {
+            authenticatedUser = null;
+
             while (Attempts < maxAttempts)
             {
                 Console.WriteLine("Ange användarnamn: ");
-                string username = Console.ReadLine();
+                var username = Console.ReadLine();
                 Console.WriteLine("Ange pinkod: ");
-                int password = Convert.ToInt32(Console.ReadLine());
-                if (userInfo.ContainsKey(username) && userInfo[username] == password)
-                {
+                var password = Console.ReadLine();
 
+                authenticatedUser = userList.FirstOrDefault(user => user.DoesUserMatch(username, password) != null);
+                
+                if (authenticatedUser!= null)
+                {
                     Console.WriteLine("Du loggas nu in...");
-                    UserName = username;
+                    Username = username;
                     return true;
                 }
                 else
                 {
                     Attempts++;
                     Console.WriteLine($"Antal försök kvar: {maxAttempts - Attempts}");
-
                 }
             }
             return false;
         }
-        public void Bankmeny()
+        public void Bankmeny(User user)
         {
-            Console.WriteLine($"Välkommen {UserName}");
+            Console.WriteLine($"Välkommen {Username}");
             Console.WriteLine("[1]. Se dina konton och dess saldon\n[2]. Överföring mellan konton\n[3]. Ta ut pengar\n[4]. Logga ut");
             try
             {
@@ -81,7 +91,8 @@ namespace Bank_gruppprojekt
 
                     case 4:
 
-                        
+                        break;  
+
                     default:
 
                         break;

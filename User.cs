@@ -14,14 +14,8 @@ namespace Bank_gruppprojekt
         public string Username;
         public string Password;
         public string AccountOwner;
-        
-        static User Ermin = new User("Ermin", "1", "Ermin Husic");
-        static User Ludwig = new User("Ludwig", "2", "Ludwig Svensson");
-        static User Isak = new User("Oskar", "3", "Oskar Johansson");
-        static User Oskar = new User("Isak", "4", "Isak Elfstrand");
-        public List<User> userList = new List<User>() { Ermin, Ludwig, Oskar, Isak };
 
-        public List<List<string>> ACCOUNTNAME = new List<List<string>>
+        static List<List<string>> Accountnames = new List<List<string>>
         {
             new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto", "Rainyday-fun" },
             new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto" },
@@ -29,6 +23,12 @@ namespace Bank_gruppprojekt
             new List<string> { "Lönekonto", "Sparkonto" },
 
         };
+
+        public List<User> userList = new List<User>() { Ermin, Ludwig, Oskar, Isak };
+        static User Ermin = new User("Ermin", "1", "Ermin Husic", Accountnames);
+        static User Ludwig = new User("Ludwig", "2", "Ludwig Svensson", Accountnames);
+        static User Isak = new User("Oskar", "3", "Oskar Johansson", Accountnames);
+        static User Oskar = new User("Isak", "4", "Isak Elfstrand", Accountnames);
 
         public List<List<decimal>> ACCOUNTBALANCE = new List<List<decimal>>
         {
@@ -47,12 +47,15 @@ namespace Bank_gruppprojekt
         //    {"Isak", 4}
         //};
         
-        public User(string userName, string passWord, string accountOwner)
+        public User(string userName, string passWord, string accountOwner, List<List<string>> accountNames)
         {
             User currentuser;
             Username = userName;
             Password = passWord;
             AccountOwner = accountOwner;
+            Accountnames = accountNames;
+            
+            
         }
         public User DoesUserMatch(string userName, string passWord)
         {           

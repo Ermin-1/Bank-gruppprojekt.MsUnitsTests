@@ -94,5 +94,86 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("Invalid input. Please enter a valid number.");
             }
         }
+        public static void TransferMoney(User currentUser)
+
+        {
+
+            Console.WriteLine("Which account do you want to transfer money from?");
+
+            currentUser.DisplayAccounts(currentUser);
+
+            if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentUser.Accounts.Count)
+
+            {
+
+                Console.WriteLine("How much money do you want to transfer?");
+
+                if (double.TryParse(Console.ReadLine(), out double transferAmount))
+
+                {
+
+                    if (currentUser.Accounts[fromAccountIndex].Balance < transferAmount)
+
+                    {
+
+                        Console.WriteLine("Insufficient funds");
+
+                    }
+
+                    else
+
+                    {
+
+                        Console.WriteLine("Which account do you want to transfer money to?");
+
+                        currentUser.DisplayAccounts(currentUser);
+
+                        if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < currentUser.Accounts.Count)
+
+                        {
+
+                            currentUser.Accounts[fromAccountIndex].Balance -= transferAmount;
+
+                            currentUser.Accounts[toAccountIndex].Balance += transferAmount;
+
+                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance:C2}");
+
+                            Console.WriteLine($"New balance for {currentUser.Accounts[toAccountIndex].Accounttype} account is {currentUser.Accounts[toAccountIndex].Balance:C2}");
+
+                        }
+
+                        else
+
+                        {
+
+                            Console.WriteLine("Invalid account selection for receiving money.");
+
+                        }
+
+                    }
+
+                }
+
+                else
+
+                {
+
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+
+                }
+
+            }
+
+            else
+
+            {
+
+                Console.WriteLine("Invalid account selection for transferring money.");
+
+            }
+
+        }
+
     }
 }
+

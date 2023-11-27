@@ -11,6 +11,7 @@ namespace Bank_gruppprojekt
 {
     public class User
     {
+        public double MaxLoan { get; set; }
         public string Username { get; set; }
         public int Pin { get; set; }
         public List<Account> Accounts { get; set; }        

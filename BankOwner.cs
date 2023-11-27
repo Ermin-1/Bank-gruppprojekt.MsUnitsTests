@@ -4,29 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//namespace Bank_gruppprojekt
-//{
-//    public class BankOwner : User
-//    {
-//        public BankOwner()
-//        {
+namespace Bank_gruppprojekt
+{
+    public class BankOwner
+    {
+        public BankOwner()
+        {
 
-//        }
+        }
+        public void SetLoanLimit(User currentUser)
+        {
+            if (currentUser != null)
+            {
+                double totalBalance = currentUser.Accounts.Sum(account => account.Balance);
+                double maxLoan = totalBalance * 5;
 
-//        public void SetLoanLimit(string username)
-//        {
-//            if (userInfo.ContainsKey(username))
-//            {
-//                int currentBalance = userInfo[username];
-//                int maxLoan = currentBalance * 5;
+                currentUser.MaxLoan = maxLoan;
 
-//                Console.WriteLine($"Loan limit set for {username}: {maxLoan}");
-//            }
-//            else
-//            {
-//                Console.WriteLine($"User {username} not found.");
-//            }
-//        }
-//    }
-//}
+                Console.WriteLine($"Loan limit set for {currentUser.Username}: {maxLoan:C2}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid user.");
+            }
+        }
+    }
+}
 

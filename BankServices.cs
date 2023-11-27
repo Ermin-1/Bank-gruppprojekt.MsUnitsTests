@@ -171,9 +171,7 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("Invalid account selection for transferring money.");
 
             }
-
         }
-
     }
 }
 

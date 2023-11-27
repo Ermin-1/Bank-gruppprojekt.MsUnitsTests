@@ -7,58 +7,10 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class LogIn : UserAccountManager , IBankServices
+    public class LogIn : UserAccountManager , IBankServices , IMenuServices
     {
         private const int MaxLoginAttempts = 3;
-        public static void Menu(User currentUser)
-        {
-            
-            Console.WriteLine($"Welcome {currentUser.Username}");
-            int option = 0;
-
-            do
-            {
-                PrintOptions();
-                try
-                {
-                    if (int.TryParse(Console.ReadLine(), out option))
-                    {
-                        switch (option)
-                        {
-                            case 1:
-                                IBankServices.Deposit(currentUser);
-                                break;
-                            case 2:
-                                IBankServices.Withdraw(currentUser);
-                                break;
-                            case 3:
-                                IBankServices.ShowBalance(currentUser);
-                                break;
-                            case 4:
-                                IBankServices.AddNewAccount(currentUser);
-                                break;
-                            case 5:
-                                IBankServices.TransferMoney(currentUser);
-                                break;
-                            case 6:
-                                Console.WriteLine("Exiting...");
-                                break;
-                            default:
-                                Console.WriteLine("Invalid option. Try again.");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                }
-            } while (option != 5);
-        }
+       
         private static int GetPin()
         {
             Console.WriteLine("Enter PIN");
@@ -81,7 +33,7 @@ namespace Bank_gruppprojekt
                     currentUser = AuthenticateUser(username, GetPin());
                     if (currentUser != null)
                     {
-                        Menu(currentUser);
+                        IMenuServices.Menu(currentUser);
                         break;
                     }
                     else
@@ -100,17 +52,5 @@ namespace Bank_gruppprojekt
             Thread.Sleep(2000);
             return currentUser;
         }
-        public static void PrintOptions()
-        {
-            Console.WriteLine("Choose from the menu");
-            Console.WriteLine("1. Deposit");
-            Console.WriteLine("2. Withdrawal");
-            Console.WriteLine("3. Show balance");
-            Console.WriteLine("4. Add new account");
-            Console.WriteLine("5. Transfer money");
-            Console.WriteLine("6. Exit");
-        }
-
-    }
-    
+    }    
 }

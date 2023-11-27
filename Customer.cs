@@ -1,80 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Channels;
+//using System.Threading.Tasks;
 
-namespace Bank_gruppprojekt
-{
-    public class Customer : User
-    {
+//namespace Bank_gruppprojekt
+//{
+//    public class Customer : User
+//    {
 
-        public Customer(string userName, string passWord, string accountOwner, List<List<string>> accountName) : base(userName, passWord, accountOwner, accountName)
-        {
-            if (userList == null)
-            {
-                userList = new List<User>();
-            }
-        }
+//        public Customer(string userName, string passWord, string accountOwner, List<List<string>> accountName) : base(userName, passWord, accountOwner, accountName)
+//        {
+//            if (userList == null)
+//            {
+//                userList = new List<User>();
+//            }
+//        }
 
-        public void Withdrawal()
-        {
-            // Search the list for the user to get the index number
-            int userIndex = userList.FindIndex(user => user.Username == this.Username);
+//        public void Withdrawal()
+//        {
+//            // Search the list for the user to get the index number
+//            int userIndex = userList.FindIndex(user => user.Username == this.Username);
 
-            Console.WriteLine("Your accounts:");
-            for (int i = 0; i < ACCOUNTNAME[userIndex].Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {ACCOUNTNAME[userIndex][i]}");
-            }
+//            Console.WriteLine("Your accounts:");
+//            for (int i = 0; i < ACCOUNTNAME[userIndex].Count; i++)
+//            {
+//                Console.WriteLine($"{i + 1}. {ACCOUNTNAME[userIndex][i]}");
+//            }
 
-            Console.WriteLine("Choose an account to make a withdrawal:");
-            int accChoice = int.Parse(Console.ReadLine());
+//            Console.WriteLine("Choose an account to make a withdrawal:");
+//            int accChoice = int.Parse(Console.ReadLine());
 
-            if (accChoice >= 1 && accChoice <= ACCOUNTNAME[userIndex].Count)
-            {
-                int accIndex = accChoice - 1;
+//            if (accChoice >= 1 && accChoice <= ACCOUNTNAME[userIndex].Count)
+//            {
+//                int accIndex = accChoice - 1;
 
-                Console.Write("How much money do you want to withdraw?: ");
-                decimal moneyToWithdraw = decimal.Parse(Console.ReadLine());
+//                Console.Write("How much money do you want to withdraw?: ");
+//                decimal moneyToWithdraw = decimal.Parse(Console.ReadLine());
 
-                if (moneyToWithdraw > 0)
-                {
-                    if (ACCOUNTBALANCE[userIndex][accIndex] >= moneyToWithdraw)
-                    {
-                        ACCOUNTBALANCE[userIndex][accIndex] -= moneyToWithdraw;
-                        Console.WriteLine($"{moneyToWithdraw:C} has been withdrawn from {ACCOUNTNAME[userIndex][accIndex]}.");
-                        Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][accIndex]}: {ACCOUNTBALANCE[userIndex][accIndex]:C}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Insufficient funds.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Minimum withdrawal is 1kr. Try again.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Account doesn't exist. Please choose a number of accounts that match the list.");
-            }
-        }
+//                if (moneyToWithdraw > 0)
+//                {
+//                    if (ACCOUNTBALANCE[userIndex][accIndex] >= moneyToWithdraw)
+//                    {
+//                        ACCOUNTBALANCE[userIndex][accIndex] -= moneyToWithdraw;
+//                        Console.WriteLine($"{moneyToWithdraw:C} has been withdrawn from {ACCOUNTNAME[userIndex][accIndex]}.");
+//                        Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][accIndex]}: {ACCOUNTBALANCE[userIndex][accIndex]:C}");
+//                    }
+//                    else
+//                    {
+//                        Console.WriteLine("Insufficient funds.");
+//                    }
+//                }
+//                else
+//                {
+//                    Console.WriteLine("Minimum withdrawal is 1kr. Try again.");
+//                }
+//            }
+//            else
+//            {
+//                Console.WriteLine("Account doesn't exist. Please choose a number of accounts that match the list.");
+//            }
+//        }
 
-        static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
-        {
+//        static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
+//        {
 
-        }
+//        }
 
 
-        static void CurrencyConvertion() // Funktion för att konvertera valutor på olika konton till ett och samma
-        {
+//        static void CurrencyConvertion() // Funktion för att konvertera valutor på olika konton till ett och samma
+//        {
 
-        }
-    }
-}
+//        }
+//    }
+//}
 
 
 

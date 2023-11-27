@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Bank_gruppprojekt
 {
     public interface IBankServices
-    {
+    {        
+
         public static void Deposit(User currentUser)
         {
             Console.WriteLine("Which account do you want to deposit into?");

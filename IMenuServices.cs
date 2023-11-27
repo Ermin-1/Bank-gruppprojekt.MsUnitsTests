@@ -20,13 +20,13 @@ namespace Bank_gruppprojekt
         }
         public static void Menu(User currentUser)
         {
-
+            Console.Clear();
             Console.WriteLine($"Welcome {currentUser.Username}");
             int option = 0;
 
             do
             {
-                IMenuServices.PrintOptions();
+                PrintOptions();
                 try
                 {
                     if (int.TryParse(Console.ReadLine(), out option))
@@ -34,19 +34,19 @@ namespace Bank_gruppprojekt
                         switch (option)
                         {
                             case 1:
-                                IBankServices.Deposit(currentUser);
+                                Deposit(currentUser);
                                 break;
                             case 2:
-                                IBankServices.Withdraw(currentUser);
+                                Withdraw(currentUser);
                                 break;
                             case 3:
-                                IBankServices.ShowBalance(currentUser);
+                                ShowBalance(currentUser);
                                 break;
                             case 4:
-                                IBankServices.AddNewAccount(currentUser);
+                                AddNewAccount(currentUser);
                                 break;
                             case 5:
-                                IBankServices.TransferMoney(currentUser);
+                                TransferMoney(currentUser);
                                 break;
                             case 6:
                                 Console.WriteLine("Exiting...");
@@ -65,7 +65,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 5);
+            } while (option != 6);
         }
     }
 }

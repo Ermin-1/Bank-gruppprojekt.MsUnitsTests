@@ -9,8 +9,8 @@ namespace Bank_gruppprojekt
 {
     public class LogIn : UserAccountManager , IBankServices , IMenuServices
     {
-        private const int MaxLoginAttempts = 3;
-       
+        public const int MaxLoginAttempts = 3;
+
         private static int GetPin()
         {
             Console.WriteLine("Enter PIN");

@@ -18,6 +18,7 @@ namespace Bank_gruppprojekt
         }
         public static User LoginIn()
         {
+            Console.Clear();
             GetUsersWithAccounts();
             Console.WriteLine("Welcome to the bank");
             string username = "";
@@ -47,9 +48,13 @@ namespace Bank_gruppprojekt
                     Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
                     loginAttempts++;
                 }
+                if (loginAttempts == 3) 
+                {
+                    Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
+                    Thread.Sleep(2000);
+                }
             }
-            Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
-            Thread.Sleep(2000);
+
             return currentUser;
         }
     }    

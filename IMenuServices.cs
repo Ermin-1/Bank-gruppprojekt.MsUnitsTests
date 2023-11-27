@@ -50,6 +50,7 @@ namespace Bank_gruppprojekt
                                 break;
                             case 6:
                                 Console.WriteLine("Exiting...");
+                                LogIn.LoginIn();
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");

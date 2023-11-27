@@ -10,64 +10,53 @@ using System.Threading.Tasks;
 namespace Bank_gruppprojekt
 {
     public class User
-    {                      
-        public string Username;
-        public string Password;
-        public string AccountOwner;
+    {
+        public string Username { get; set; }
+        public int Pin { get; set; }
+        public List<Account> Accounts { get; set; }
+        //public List<User> Users { get; set; }
 
-        static List<List<string>> Accountnames = new List<List<string>>
+        public User(string username, int pin)
         {
-            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto", "Rainyday-fun" },
-            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto", "Huskonto" },
-            new List<string> { "Lönekonto", "Sparkonto", "Privatkonto" },
-            new List<string> { "Lönekonto", "Sparkonto" },
+            Username = username;
+            Pin = pin;
+            Accounts = new List<Account>();
+            //Users = new List<User>();
 
-        };
+            //Users = new List<User>
+            //{
+            //    new User("Ermin", 1111),
+            //    new User("Oskar", 1234),
+            //    new User("Ludde", 3545),
+            //    new User("Isac", 4355)
+            //};
 
-        public List<User> userList = new List<User>() { Ermin, Ludwig, Oskar, Isak };
-        static User Ermin = new User("Ermin", "1", "Ermin Husic", Accountnames);
-        static User Ludwig = new User("Ludwig", "2", "Ludwig Svensson", Accountnames);
-        static User Isak = new User("Oskar", "3", "Oskar Johansson", Accountnames);
-        static User Oskar = new User("Isak", "4", "Isak Elfstrand", Accountnames);
+            //Users[0].AddAccount("Savings", 2000);
+            //Users[0].AddAccount("Checking", 1000);
 
-        public List<List<decimal>> ACCOUNTBALANCE = new List<List<decimal>>
-        {
-            new List<decimal> { 27500.0m, 300000.0m, 50000.0m, 20000.0m, 100000.0m },
-            new List<decimal> { 42000.0m, 200000.0m, 150000.0m, 60000.0m },
-            new List<decimal> { 25000.0m, 46000.0m, 450000.0m },
-            new List<decimal> { 15000.0m, 10000.0m },
+            //Users[1].AddAccount("Savings", 1500);
+            //Users[1].AddAccount("Checking", 500);
 
-        };
+            //Users[2].AddAccount("Savings", 3000);
+            //Users[2].AddAccount("Checking", 2000);
 
-        //public Dictionary<string, int> userInfo = new Dictionary<string, int>
-        //{
-        //    {"Ermin", 1},
-        //    {"Ludwig", 2},
-        //    {"Oskar", 3},
-        //    {"Isak", 4}
-        //};
+            //Users[3].AddAccount("Savings", 2500);
+            //Users[3].AddAccount("Checking", 1200);
+        }
         
-        public User(string userName, string passWord, string accountOwner, List<List<string>> accountNames)
-        {
-            User currentuser;
-            Username = userName;
-            Password = passWord;
-            AccountOwner = accountOwner;
-            Accountnames = accountNames;
-            
-            
-        }
-        public User DoesUserMatch(string userName, string passWord)
-        {           
-            foreach (User user in userList)
-            {
-                if (user != null && user.Username == userName && user.Password == passWord)
-                {
-                    return user; 
 
-                }
-            }
-            return null;
+        public void AddAccount(string accountType, double initialBalance)
+        {
+            Accounts.Add(new Account(accountType, initialBalance));
         }
+        public void DisplayAccounts(User user)
+        {
+            Console.WriteLine("Accounts:");
+            for (int i = 0; i < user.Accounts.Count; i++)
+            {
+                Console.WriteLine($"{i}. {user.Accounts[i].Accounttype}");
+            }
+        }
+      
     }
 }

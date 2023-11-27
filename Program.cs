@@ -1,10 +1,15 @@
-﻿namespace Bank_gruppprojekt
+﻿using Bank_gruppprojekt;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace BankApplication
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
-        {           
-             new Bank("", "", "").Runlogin();
-        }      
+        {               
+            LogIn.LoginIn();           
+        }        
     }
 }

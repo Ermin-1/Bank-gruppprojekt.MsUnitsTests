@@ -9,8 +9,10 @@ namespace Bank_gruppprojekt
 {
     public class LogIn : UserAccountManager , IBankServices
     {
+        private const int MaxLoginAttempts = 3;
         public static void Menu(User currentUser)
         {
+            
             Console.WriteLine($"Welcome {currentUser.Username}");
             int option = 0;
 
@@ -36,6 +38,9 @@ namespace Bank_gruppprojekt
                                 IBankServices.AddNewAccount(currentUser);
                                 break;
                             case 5:
+                                IBankServices.TransferMoney(currentUser);
+                                break;
+                            case 6:
                                 Console.WriteLine("Exiting...");
                                 break;
                             default:
@@ -63,35 +68,36 @@ namespace Bank_gruppprojekt
         {
             GetUsersWithAccounts();
             Console.WriteLine("Welcome to the bank");
-            Console.WriteLine("Enter username: ");
             string username = "";
             User currentUser = null;
+            int loginAttempts = 0;
 
-            while (true)
+            while (loginAttempts < MaxLoginAttempts)
             {
                 try
                 {
+                    Console.WriteLine("Enter username: ");
                     username = Console.ReadLine();
                     currentUser = AuthenticateUser(username, GetPin());
-                    if (username != null)
+                    if (currentUser != null)
                     {
                         Menu(currentUser);
-                    }
-                    else if(currentUser == null)
-                    {
-                        Console.WriteLine("User not found or incorrect PIN. Please try again.");
+                        break;
                     }
                     else
                     {
-                        break;
-                    }
+                        Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                        loginAttempts++;
+                    } 
                 }
                 catch
                 {
-                    Console.WriteLine("Error finding user");
+                    Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                    loginAttempts++;
                 }
             }
-
+            Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
+            Thread.Sleep(2000);
             return currentUser;
         }
         public static void PrintOptions()
@@ -101,7 +107,8 @@ namespace Bank_gruppprojekt
             Console.WriteLine("2. Withdrawal");
             Console.WriteLine("3. Show balance");
             Console.WriteLine("4. Add new account");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Transfer money");
+            Console.WriteLine("6. Exit");
         }
 
     }

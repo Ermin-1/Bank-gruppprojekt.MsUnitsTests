@@ -16,9 +16,10 @@ namespace Bank_gruppprojekt
             Console.WriteLine("3. Show balance");
             Console.WriteLine("4. Add new account");
             Console.WriteLine("5. Transfer money");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("6. Check history of withdrawls and deposits");
+            Console.WriteLine("7. Exit");
         }
-        public static void Menu(User currentUser)
+        public static void Menu(User currentUser, ILog log)
         {
             Console.Clear();
             Console.WriteLine($"Welcome {currentUser.Username}");
@@ -34,10 +35,10 @@ namespace Bank_gruppprojekt
                         switch (option)
                         {
                             case 1:
-                                Deposit(currentUser);
+                                Deposit(currentUser, log);
                                 break;
                             case 2:
-                                Withdraw(currentUser);
+                                Withdraw(currentUser, log);
                                 break;
                             case 3:
                                 ShowBalance(currentUser);
@@ -49,8 +50,11 @@ namespace Bank_gruppprojekt
                                 TransferMoney(currentUser);
                                 break;
                             case 6:
+                                PrintLogBois(log);
+                                break;
+                            case 7:
                                 Console.WriteLine("Exiting...");
-                                LogIn.LoginIn();
+                                LogIn.LoginIn(log);
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");

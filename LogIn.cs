@@ -16,7 +16,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Enter PIN");
             return int.Parse(Console.ReadLine());
         }
-        public static User LoginIn()
+        public static User LoginIn(ILog log)
         {
             Console.Clear();
             GetUsersWithAccounts();
@@ -34,7 +34,7 @@ namespace Bank_gruppprojekt
                     currentUser = AuthenticateUser(username, GetPin());
                     if (currentUser != null)
                     {
-                        IMenuServices.Menu(currentUser);
+                        IMenuServices.Menu(currentUser, log);
                         break;
                     }
                     else

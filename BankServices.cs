@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public interface IBankServices
+    public interface IBankServices 
     {        
 
-        public static void Deposit(User currentUser, double ammount)
+        public static void Deposit(User currentUser, ILog log)
         {
             Console.WriteLine("Which account do you want to deposit into?");
             currentUser.DisplayAccounts(currentUser);
@@ -19,9 +19,11 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("How much money do you want to deposit?");
                 if (double.TryParse(Console.ReadLine(), out double deposit))
                 {
-
+                    
                     currentUser.Accounts[accountIndex].Balance += deposit;
                     Console.WriteLine($"Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
+
+                    log.LogDeposit(deposit);
                 }
                 else
                 {
@@ -34,7 +36,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void Withdraw(User currentUser)
+        public static void Withdraw(User currentUser, ILog log)
         {
             Console.WriteLine("Which account do you want to withdraw from?");
             currentUser.DisplayAccounts(currentUser);
@@ -52,6 +54,8 @@ namespace Bank_gruppprojekt
                     {
                         currentUser.Accounts[accountIndex].Balance -= withdrawal;
                         Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
+
+                        log.LogWithdraw(withdrawal);
                     }
                 }
                 else
@@ -172,6 +176,14 @@ namespace Bank_gruppprojekt
 
                 Console.WriteLine("Invalid account selection for transferring money.");
 
+            }
+        }
+        public static void PrintLogBois(ILog log)
+        {
+            List<string> loggersPoggers = log.GetLogBois();
+            foreach (var logboi in loggersPoggers)
+            {
+                Console.WriteLine(logboi);
             }
         }
     }

@@ -8,8 +8,9 @@ namespace BankApplication
     public class Program
     {
         static void Main(string[] args)
-        {               
-            LogIn.LoginIn();           
+        {
+            LogClass log = new LogClass();
+            LogIn.LoginIn(log);           
         }        
     }
 }

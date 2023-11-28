@@ -104,82 +104,132 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void TransferMoney(User currentUser)
-
+        public static void TransferMoney(User currentUser, List<User> allUsers)
         {
+            Console.WriteLine("Do you want to transfer money between your own accounts or to another user?");
+            Console.WriteLine("1. Own accounts");
+            Console.WriteLine("2. Another user");
 
+            if (int.TryParse(Console.ReadLine(), out int transferChoice) && (transferChoice == 1 || transferChoice == 2))
+            {
+                if (transferChoice == 1)
+                {
+                    TransferBetweenOwnAccounts(currentUser);
+                }
+                else
+                {
+                    TransferToAnotherUser(currentUser, allUsers);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+            }
+        }
+
+        private static void TransferBetweenOwnAccounts(User currentUser)
+        {
             Console.WriteLine("Which account do you want to transfer money from?");
-
             currentUser.DisplayAccounts(currentUser);
 
             if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentUser.Accounts.Count)
-
             {
-
                 Console.WriteLine("How much money do you want to transfer?");
 
                 if (double.TryParse(Console.ReadLine(), out double transferAmount))
-
                 {
-
                     if (currentUser.Accounts[fromAccountIndex].Balance < transferAmount)
-
                     {
-
-                        Console.WriteLine("Insufficient funds");
-
+                        Console.WriteLine("Insufficient funds for the selected account.");
                     }
-
                     else
-
                     {
-
                         Console.WriteLine("Which account do you want to transfer money to?");
-
                         currentUser.DisplayAccounts(currentUser);
 
                         if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < currentUser.Accounts.Count)
-
                         {
-
                             currentUser.Accounts[fromAccountIndex].Balance -= transferAmount;
-
                             currentUser.Accounts[toAccountIndex].Balance += transferAmount;
 
-                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance}");
-
-                            Console.WriteLine($"New balance for {currentUser.Accounts[toAccountIndex].Accounttype} account is {currentUser.Accounts[toAccountIndex].Balance}");
-
+                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance:C2}");
+                            Console.WriteLine($"New balance for {currentUser.Accounts[toAccountIndex].Accounttype} account is {currentUser.Accounts[toAccountIndex].Balance:C2}");
                         }
-
                         else
-
                         {
-
                             Console.WriteLine("Invalid account selection for receiving money.");
-
                         }
-
                     }
-
                 }
-
                 else
-
                 {
-
                     Console.WriteLine("Invalid input. Please enter a valid number.");
-
                 }
-
             }
-
             else
-
             {
-
                 Console.WriteLine("Invalid account selection for transferring money.");
+            }
+        }
+        private static void TransferToAnotherUser(User currentUser, List<User> allUsers)
+        {
+            Console.WriteLine("Which account do you want to transfer money to?");
+            DisplayUsers(allUsers);
+            if (int.TryParse(Console.ReadLine(), out int toUserIndex) && toUserIndex >= 0 && toUserIndex < allUsers.Count)
+            {
+                User receiver = allUsers[toUserIndex];
 
+                Console.WriteLine("Which account do you want to transfer money to?");
+                currentUser.DisplayAccounts(currentUser);
+
+                if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentUser.Accounts.Count)
+                {
+                    Console.WriteLine("How much money do you want to transfer?");
+
+                    if (double.TryParse(Console.ReadLine(), out double transferAmount))
+                    {
+                        if (currentUser.Accounts[fromAccountIndex].Balance < transferAmount)
+                        {
+                            Console.WriteLine("Insufficient funds for the selected account.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Which account do you want to transfer money to?");
+                            receiver.DisplayAccounts(receiver);
+
+                            if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < receiver.Accounts.Count)
+                            {
+                                currentUser.Accounts[fromAccountIndex].Balance -= transferAmount;
+                                receiver.Accounts[toAccountIndex].Balance += transferAmount;
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance:C2}");
+                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex].Accounttype} account is {receiver.Accounts[toAccountIndex].Balance:C2}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid account selection for receiving money.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid account selection for transferring money.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid user selection for transferring money.");
+            }
+        }
+        public static void DisplayUsers(List<User> users)
+        {
+            for (int i = 0; i < users.Count; i++)
+            {
+                Console.WriteLine($"{i}. {users[i].Username}");
             }
         }
         public static void PrintLogBois(ILog log)

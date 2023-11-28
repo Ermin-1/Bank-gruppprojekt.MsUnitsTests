@@ -12,12 +12,15 @@ namespace Bank_gruppprojekt
 
         public string Accounttype { get; set; }
         public double Balance { get; set; }
+        public string Currency { get; set; }
 
-        public Account(string accountType, double balance, ILog log = null)
+
+        public Account(string accountType, double balance, string currency, ILog log = null)
         {
             Accounttype = accountType;
             Balance = balance;
             Log = log;
+            Currency = currency;
         }
 
     }

@@ -21,7 +21,7 @@ namespace Bank_gruppprojekt
                 {
                     
                     currentUser.Accounts[accountIndex].Balance += deposit;
-                    Console.WriteLine($"Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
+                    Console.WriteLine($"Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance}");
 
                     log.LogDeposit(deposit);
                 }
@@ -53,7 +53,7 @@ namespace Bank_gruppprojekt
                     else
                     {
                         currentUser.Accounts[accountIndex].Balance -= withdrawal;
-                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
+                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance}");
 
                         log.LogWithdraw(withdrawal);
                     }
@@ -76,7 +76,7 @@ namespace Bank_gruppprojekt
 
             if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentUser.Accounts.Count)
             {
-                Console.WriteLine($"Your balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
+                Console.WriteLine($"Your balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance} {currentUser.Accounts[accountIndex].Currency}");
             }
             else
             {
@@ -92,14 +92,18 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Enter the initial balance:");
             if (double.TryParse(Console.ReadLine(), out double initialBalance))
             {
-                currentUser.AddAccount(accountType, initialBalance);
-                Console.WriteLine($"New {accountType} account added with an initial balance of {initialBalance:C2}");
+                Console.WriteLine("Enter the currency (e.g., SEK, USD):");
+                string currency = Console.ReadLine();
+
+                currentUser.AddAccount(accountType, initialBalance, currency);
+                Console.WriteLine($"New {accountType} account added with an initial balance of {initialBalance} {currency}");
             }
             else
             {
                 Console.WriteLine("Invalid input. Please enter a valid number.");
             }
         }
+
         public static void TransferMoney(User currentUser)
 
         {
@@ -142,9 +146,9 @@ namespace Bank_gruppprojekt
 
                             currentUser.Accounts[toAccountIndex].Balance += transferAmount;
 
-                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance:C2}");
+                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentUser.Accounts[fromAccountIndex].Accounttype} account is {currentUser.Accounts[fromAccountIndex].Balance}");
 
-                            Console.WriteLine($"New balance for {currentUser.Accounts[toAccountIndex].Accounttype} account is {currentUser.Accounts[toAccountIndex].Balance:C2}");
+                            Console.WriteLine($"New balance for {currentUser.Accounts[toAccountIndex].Accounttype} account is {currentUser.Accounts[toAccountIndex].Balance}");
 
                         }
 

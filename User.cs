@@ -23,9 +23,9 @@ namespace Bank_gruppprojekt
         }
         
 
-        public void AddAccount(string accountType, double initialBalance)
+        public void AddAccount(string accountType, double initialBalance, string currency)
         {
-            Accounts.Add(new Account(accountType, initialBalance));
+            Accounts.Add(new Account(accountType, initialBalance, currency));
         }
         public void DisplayAccounts(User user)
         {

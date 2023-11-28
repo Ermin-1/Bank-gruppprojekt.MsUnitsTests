@@ -13,7 +13,7 @@ namespace Bank_gruppprojekt
         public string Accounttype { get; set; }
         public double Balance { get; set; }
 
-        public Account(string accountType, double balance, ILog log)
+        public Account(string accountType, double balance, ILog log = null)
         {
             Accounttype = accountType;
             Balance = balance;

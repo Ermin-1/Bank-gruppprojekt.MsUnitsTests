@@ -12,7 +12,7 @@ namespace Bank_gruppprojekt
         {
 
         }
-        public void SetLoanLimit(User currentUser)
+        public void SetLoanLimit(Customer currentUser)
         {
             if (currentUser != null)
             {

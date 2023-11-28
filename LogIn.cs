@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class LogIn : UserAccountManager , IBankServices , IMenuServices
+    public class LogIn : CustomerAccountManager , ICustomerBank , IMenuServices
     {
         public const int MaxLoginAttempts = 3;
 
@@ -16,13 +16,13 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Enter PIN");
             return int.Parse(Console.ReadLine());
         }
-        public static User LoginIn(ILog log, List<User> allUsers)
+        public static Customer LoginIn(ILog log, List<Customer> allUsers)
         {
             Console.Clear();
             GetUsersWithAccounts();
             Console.WriteLine("Welcome to the bank");
             string username = "";
-            User currentUser = null;
+            Customer currentUser = null;
             int loginAttempts = 0;
 
             while (loginAttempts < MaxLoginAttempts)
@@ -31,10 +31,11 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine("Enter username: ");
                     username = Console.ReadLine();
-                    currentUser = AuthenticateUser(username, GetPin());
+                    currentUser = AuthenticateCustomer(username, GetPin());
                     if (currentUser != null)
                     {
-                        IMenuServices.Menu(currentUser, log, allUsers);
+
+                        Customer.Menu(currentUser, log, allUsers);
                         break;
                     }
                     else

@@ -1,196 +1,469 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Channels;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
-//namespace Bank_gruppprojekt
-//{
-//    public class Customer : User
-//    {
+namespace Bank_gruppprojekt
+{
+    public class Customer : User, ICustomerBank, IMenuServices
+    {
+        public const int MaxLoginAttempts = 3;
+        public List<Account> Accounts { get; set; }
 
-//        public Customer(string userName, string passWord, string accountOwner, List<List<string>> accountName) : base(userName, passWord, accountOwner, accountName)
-//        {
-//            if (userList == null)
-//            {
-//                userList = new List<User>();
-//            }
-//        }
+        private static List<Customer> Customers;
 
-//        public void Withdrawal()
-//        {
-//            // Search the list for the user to get the index number
-//            int userIndex = userList.FindIndex(user => user.Username == this.Username);
+        static Customer()
+        {
 
-//            Console.WriteLine("Your accounts:");
-//            for (int i = 0; i < ACCOUNTNAME[userIndex].Count; i++)
-//            {
-//                Console.WriteLine($"{i + 1}. {ACCOUNTNAME[userIndex][i]}");
-//            }
+            Customers = new List<Customer>
+        {
+            new Customer("Ermin", 1111),
+            new Customer("Oskar", 1234),
+            new Customer("Ludde", 3545),
+            new Customer("Isac", 4355)
+        };
 
-//            Console.WriteLine("Choose an account to make a withdrawal:");
-//            int accChoice = int.Parse(Console.ReadLine());
+            Customers[0].Accounts.Add(new Account("USA-account", 2000, "USD"));
+            Customers[0].Accounts.Add(new Account("Household", 52000, "SEK"));
+            Customers[0].Accounts.Add(new Account("Savings", 9000, "SEK"));
 
-//            if (accChoice >= 1 && accChoice <= ACCOUNTNAME[userIndex].Count)
-//            {
-//                int accIndex = accChoice - 1;
+            Customers[1].Accounts.Add(new Account("USA-account", 1500, "USD"));
+            Customers[1].Accounts.Add(new Account("Padel", 80000, "SEK"));
 
-//                Console.Write("How much money do you want to withdraw?: ");
-//                decimal moneyToWithdraw = decimal.Parse(Console.ReadLine());
+            Customers[2].Accounts.Add(new Account("Main", 500, "SEK"));
+            Customers[2].Accounts.Add(new Account("Savings", 10000, "SEK"));
+            Customers[2].Accounts.Add(new Account("USA-account", 3200, "USD"));
+            Customers[2].Accounts.Add(new Account("Trip", 70000, "SEK"));
 
-//                if (moneyToWithdraw > 0)
-//                {
-//                    if (ACCOUNTBALANCE[userIndex][accIndex] >= moneyToWithdraw)
-//                    {
-//                        ACCOUNTBALANCE[userIndex][accIndex] -= moneyToWithdraw;
-//                        Console.WriteLine($"{moneyToWithdraw:C} has been withdrawn from {ACCOUNTNAME[userIndex][accIndex]}.");
-//                        Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][accIndex]}: {ACCOUNTBALANCE[userIndex][accIndex]:C}");
-//                    }
-//                    else
-//                    {
-//                        Console.WriteLine("Insufficient funds.");
-//                    }
-//                }
-//                else
-//                {
-//                    Console.WriteLine("Minimum withdrawal is 1kr. Try again.");
-//                }
-//            }
-//            else
-//            {
-//                Console.WriteLine("Account doesn't exist. Please choose a number of accounts that match the list.");
-//            }
-//        }
+            Customers[3].Accounts.Add(new Account("Main", 2500, "SEK"));
+            Customers[3].Accounts.Add(new Account("USA-account", 10, "USD"));
+            Customers[3].Accounts.Add(new Account("Household", 50000, "SEK"));
+            Customers[3].Accounts.Add(new Account("Gym", 300, "SEK"));
+            Customers[3].Accounts.Add(new Account("Cs skins", 25000, "SEK"));
+        }
 
-//        static void TransferMoneyToOtherUsers() // Funktion för att överföra pengar till ANDRA användare
-//        {
+        public Customer (string userName, int pin) : base (userName, pin)
+        {
+            Username = userName;
+            Pin = pin;
+            Accounts = new List<Account>();
+        }
 
-//        }
+        public static void Deposit(Customer currentCustomer, ILog log)
+        {
+            Console.WriteLine("Which account do you want to deposit into?");
+            currentCustomer.DisplayAccounts(currentCustomer);
 
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            {
+                Console.WriteLine("How much money do you want to deposit?");
+                if (double.TryParse(Console.ReadLine(), out double deposit))
+                {
 
-//        static void CurrencyConvertion() // Funktion för att konvertera valutor på olika konton till ett och samma
-//        {
+                    currentCustomer.Accounts[accountIndex].Balance += deposit;
+                    Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-//        }
-//    }
-//}
+                    log.LogDeposit(deposit);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+            }
+        }
 
+        public void CreateAccount(string accountType, double initialBalance, string currency)
+        {
+            Accounts.Add(new Account(accountType, initialBalance, currency));
+        }
 
+        public void DisplayAccounts(Customer customer)
+        {
+            Console.WriteLine("Accounts:");
+            for (int i = 0; i < customer.Accounts.Count; i++)
+            {
+                Console.WriteLine($"{i}. {customer.Accounts[i].Accounttype}");
+            }
+        }
 
+        public static void Withdraw(Customer currentCustomer, ILog log)
+        {
+            Console.WriteLine("Which account do you want to withdraw from?");
+            currentCustomer.DisplayAccounts(currentCustomer);
 
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            {
+                Console.WriteLine("How much do you want to withdraw?");
+                if (double.TryParse(Console.ReadLine(), out double withdrawal))
+                {
+                    if (currentCustomer.Accounts[accountIndex].Balance < withdrawal)
+                    {
+                        Console.WriteLine("Insufficient funds");
+                    }
+                    else
+                    {
+                        currentCustomer.Accounts[accountIndex].Balance -= withdrawal;
+                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-    //        static void TransferMoney()
-    //        {
-    //            // Get the index of the currently logged-in user
-    //            int userIndex = .IndexOf(UserList);
+                        log.LogWithdraw(withdrawal);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+            }
+        }
 
-    //            // Display the user's accounts
-    //            Console.WriteLine("Your accounts:");
-    //            for (int i = 0; i < ACCOUNTNAME[userIndex].Count; i++)
-    //            {
-    //                Console.WriteLine($"{i + 1}. {ACCOUNTNAME[userIndex][i]}");
-    //            }
+        public static void ShowBalance(Customer currentCustomer)
+        {
+            Console.WriteLine("Which account balance do you want to check?");
+            currentCustomer.DisplayAccounts(currentCustomer);
 
-    //            Console.Write("Choose the account to transfer money from (enter the number): ");
-    //            int fromAccount = int.Parse(Console.ReadLine());
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            {
+                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance} {currentCustomer.Accounts[accountIndex].Currency}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+            }
+        }
 
-    //            if (fromAccount >= 1 && fromAccount <= ACCOUNTNAME[userIndex].Count)
-    //            {
-    //                int fromAccountIndex = fromAccount - 1;
+        public static List<Customer> GetUsersWithAccounts()
+        {
+            return Customers;
+        }
 
-    //                Console.Write("Choose the account to transfer money to (enter the number): ");
-    //                int toAccount = int.Parse(Console.ReadLine());
+        public static Customer AuthenticateCustomer(string username, int pin)
+        {
+            return Customers.FirstOrDefault(u => u.Username == username && u.Pin == pin);
+        }
 
-    //                if (toAccount >= 1 && toAccount <= ACCOUNTNAME[userIndex].Count)
-    //                {
-    //                    int toAccountIndex = toAccount - 1;
+        public static Customer LoginIn(ILog log, List<Customer> allUsers)
+        {
+            Console.Clear();
+            GetUsersWithAccounts();
+            Console.WriteLine("Welcome to the bank");
+            string username = "";
+            Customer currentCustomer = null;
+            int loginAttempts = 0;
 
-    //                    Console.Write("Enter the amount to transfer: ");
-    //                    decimal transferAmount = decimal.Parse(Console.ReadLine());
+            while (loginAttempts < MaxLoginAttempts)
+            {
+                try
+                {
+                    Console.WriteLine("Enter username: ");
+                    username = Console.ReadLine();
+                    currentCustomer = AuthenticateCustomer(username, GetPin());
+                    if (currentCustomer != null)
+                    {
 
-    //                    if (transferAmount > 0)
-    //                    {
-    //                        if (ACCOUNTBALANCE[userIndex][fromAccountIndex] >= transferAmount)
-    //                        {
-    //                            ACCOUNTBALANCE[userIndex][fromAccountIndex] -= transferAmount;
-    //                            ACCOUNTBALANCE[userIndex][toAccountIndex] += transferAmount;
+                        Customer.Menu(currentCustomer, log, allUsers);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                        loginAttempts++;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                    loginAttempts++;
+                }
+                if (loginAttempts == 3)
+                {
+                    Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
+                    Thread.Sleep(2000);
+                }
+            }
 
-    //                            Console.WriteLine("");
-    //                            Console.WriteLine($"{transferAmount:C} has been transferred from {ACCOUNTNAME[userIndex][fromAccountIndex]} to {ACCOUNTNAME[userIndex][toAccountIndex]}.");
-    //                            Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][fromAccountIndex]}: {ACCOUNTBALANCE[userIndex][fromAccountIndex]:C}");
-    //                            Console.WriteLine($"New balance for {ACCOUNTNAME[userIndex][toAccountIndex]}: {ACCOUNTBALANCE[userIndex][toAccountIndex]:C}");
-    //                        }
-    //                        else
-    //                        {
-    //                            Console.WriteLine("Insufficient funds in the selected account to complete the transfer.");
-    //                        }
-    //                    }
-    //                    else
-    //                    {
-    //                        Console.WriteLine("Invalid amount. Please enter a positive decimal value.");
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    Console.WriteLine("Invalid selection for the receiving account. Please enter a number corresponding to one of your accounts.");
-    //                }
-    //            }
-    //            else
-    //            {
-    //                Console.WriteLine("Invalid selection for the sending account. Please enter a number corresponding to one of your accounts.");
-    //            }
+            return currentCustomer;
+        }
 
-    //            Console.WriteLine("");
-    //        }
+        public static void Menu(Customer currentCustomer, ILog log, List<Customer> allCustomers)
+        {
+            Console.Clear();
+            Console.WriteLine($"Welcome {currentCustomer.Username}");
+            int option = 0;
 
-    //        static void ShowAccounts()
-    //        {
+            do
+            {
+                PrintOptions();
+                try
+                {
+                    if (int.TryParse(Console.ReadLine(), out option))
+                    {
+                        switch (option)
+                        {
+                            case 1:
+                                Deposit(currentCustomer, log);
+                                break;
+                            case 2:
+                                Withdraw(currentCustomer, log);
+                                break;
+                            case 3:
+                                ShowBalance(currentCustomer);
+                                break;
+                            case 4:
+                                AddNewAccount(currentCustomer);
+                                break;
+                            case 5:
+                                TransferMoney(currentCustomer, allCustomers);
+                                break;
+                            case 6:
+                                PrintLogBois(log);
+                                break;                          
+                            case 7:
+                                Console.WriteLine("Exiting...");
+                                LogIn.LoginIn(log, allCustomers);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid option. Try again.");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+            } while (option != 8);
+        }
 
-    //            // Hitta användarens index baserat på inloggadSom i arrayen KontoÄgare.
-    //            int AnvändarIndex = Array.LastIndexOf(KontoÄgare, inloggadSom);
+        public static void AddNewAccount(Customer currentCustomer)
+        {
+            Console.WriteLine("Enter the type of the new account:");
+            string accountType = Console.ReadLine();
 
+            Console.WriteLine("Enter the initial balance:");
+            if (double.TryParse(Console.ReadLine(), out double initialBalance))
+            {
+                Console.WriteLine("Enter the currency (e.g., SEK, USD):");
+                string currency = Console.ReadLine();
 
-    //            Console.WriteLine($"Konton och saldo för {inloggadSom}:");
-    //            Console.WriteLine("");
+                currentCustomer.CreateAccount(accountType, initialBalance, currency);
+                Console.WriteLine($"New {accountType} account added with an initial balance of {initialBalance} {currency}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+            }
+        }
 
-    //            // Loopar igenom användarens konton genom ovan angivet AnvändarIndex och skriver ut kontonamn och saldo.
-    //            // :C tillagt för att skriva ut som valuta kr.
-    //            for (int i = 0; i < KontoNamn[AnvändarIndex].Length; i++)
-    //            {
+        public static void TransferMoney()
+        {
+            List<User> allUsers = UserAccountManager.GetUsersWithAccounts();
 
-    //                Console.WriteLine($"{KontoNamn[AnvändarIndex][i]}: {KontoSaldo[AnvändarIndex][i]:C}");
-    //            }
+            Console.WriteLine("Which user do you want to transfer money to?");
+            DisplayUsers(allUsers);
 
+            if (int.TryParse(Console.ReadLine(), out int toUserIndex) && toUserIndex >= 0 && toUserIndex < allUsers.Count)
+            {
+                User recipient = allUsers[toUserIndex];
 
-    //            static void TransferToOthers() // Funktion för att överföra pengar till ANDRA användare
-    //            {
+                Console.WriteLine("Which account do you want to transfer money from?");
+                DisplayAccounts(recipient);
 
-    //            }
+                if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < recipient.Accounts.Count)
+                {
+                    Console.WriteLine($"How much money do you want to transfer from {recipient.Accounts[fromAccountIndex].Accounttype}?");
+                    if (double.TryParse(Console.ReadLine(), out double transferAmount))
+                    {
+                        if (recipient.Accounts[fromAccountIndex].Balance < transferAmount)
+                        {
+                            Console.WriteLine("Insufficient funds for the selected account.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Which account do you want to transfer money to?");
+                            DisplayAccounts(recipient);
 
-    //            static void HistoryTransfers()
-    //            {
+                            if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < recipient.Accounts.Count)
+                            {
+                                recipient.Accounts[fromAccountIndex].Balance -= transferAmount;
+                                recipient.Accounts[toAccountIndex].Balance += transferAmount;
 
-    //            }
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {recipient.Accounts[fromAccountIndex].Accounttype} account is {recipient.Accounts[fromAccountIndex].Balance:C2}");
+                                Console.WriteLine($"New balance for {recipient.Accounts[toAccountIndex].Accounttype} account is {recipient.Accounts[toAccountIndex].Balance:C2}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid account selection for receiving money.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid account selection for transferring money.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid user selection for transferring money.");
+            }
+        }
 
-    //            static void OpenNewIntrestAccount()
-    //            {
+        private static void TransferBetweenOwnAccounts(Customer currentCustomer)
+        {
+            Console.WriteLine("Which account do you want to transfer money from?");
+            currentCustomer.DisplayAccounts(currentCustomer);
 
-    //            }
+            if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentCustomer.Accounts.Count)
+            {
+                Console.WriteLine("How much money do you want to transfer?");
 
-    //            static void OpenNewAccount()
-    //            {
+                if (double.TryParse(Console.ReadLine(), out double transferAmount))
+                {
+                    if (currentCustomer.Accounts[fromAccountIndex].Balance < transferAmount)
+                    {
+                        Console.WriteLine("Insufficient funds for the selected account.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Which account do you want to transfer money to?");
+                        currentCustomer.DisplayAccounts(currentCustomer);
 
-    //            }
+                        if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < currentCustomer.Accounts.Count)
+                        {
+                            currentCustomer.Accounts[fromAccountIndex].Balance -= transferAmount;
+                            currentCustomer.Accounts[toAccountIndex].Balance += transferAmount;
 
-    //            static void CurrencyConvertion()
-    //            {
+                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex].Balance:C2}");
+                            Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex].Accounttype} account is {currentCustomer.Accounts[toAccountIndex].Balance:C2}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid account selection for receiving money.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection for transferring money.");
+            }
+        }
 
-    //            }
+        private static void TransferToAnotherUser(Customer currentCustomer, List<Customer> allCustomers)
+        {
+            Console.WriteLine("Which account do you want to transfer money to?");
+            DisplayUsers(allCustomers);
+            if (int.TryParse(Console.ReadLine(), out int toUserIndex) && toUserIndex >= 0 && toUserIndex < allCustomers.Count)
+            {
+                Customer receiver = allCustomers[toUserIndex];
 
-    //        }
-    //    }
+                Console.WriteLine("Which account do you want to transfer money to?");
+                currentCustomer.DisplayAccounts(currentCustomer);
 
-    //}
+                if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentCustomer.Accounts.Count)
+                {
+                    Console.WriteLine("How much money do you want to transfer?");
+
+                    if (double.TryParse(Console.ReadLine(), out double transferAmount))
+                    {
+                        if (currentCustomer.Accounts[fromAccountIndex].Balance < transferAmount)
+                        {
+                            Console.WriteLine("Insufficient funds for the selected account.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Which account do you want to transfer money to?");
+                            receiver.DisplayAccounts(receiver);
+
+                            if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < receiver.Accounts.Count)
+                            {
+                                currentCustomer.Accounts[fromAccountIndex].Balance -= transferAmount;
+                                receiver.Accounts[toAccountIndex].Balance += transferAmount;
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex].Balance:C2}");
+                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex].Accounttype} account is {receiver.Accounts[toAccountIndex].Balance:C2}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid account selection for receiving money.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid account selection for transferring money.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid user selection for transferring money.");
+            }
+        }
+
+        public static void DisplayUsers(List<Customer> customers)
+        {
+            for (int i = 0; i < customers.Count; i++)
+            {
+                Console.WriteLine($"{i}. {customers[i].Username}");
+            }
+        }
+
+        public static void PrintLogBois(ILog log)
+        {
+            List<string> loggersPoggers = log.GetLogBois();
+            foreach (var logboi in loggersPoggers)
+            {
+                Console.WriteLine(logboi);
+            }
+        }
+
+        public static void PrintOptions()
+        {
+            Console.WriteLine("Choose from the menu");
+            Console.WriteLine("1. Deposit");
+            Console.WriteLine("2. Withdrawal");
+            Console.WriteLine("3. Show balance");
+            Console.WriteLine("4. Add new account");
+            Console.WriteLine("5. Transfer money");
+            Console.WriteLine("6. Check history of withdrawls and deposits");            
+            Console.WriteLine("7. Exit");
+        }        
+
+        private static int GetPin()
+        {
+            Console.WriteLine("Enter PIN");
+            return int.Parse(Console.ReadLine());
+        }
+    }
+
+}
+        
+
+    
 
 

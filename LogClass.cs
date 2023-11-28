@@ -11,14 +11,14 @@ namespace Bank_gruppprojekt
         private List<string> logActivity = new List<string>();
         public void LogDeposit(double amount)
         {
-            string logBoi = $"Deposit: {amount}C2";
+            string logBoi = $"Deposit: {amount:C2}";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }
 
         public void LogWithdraw(double amount)
         {
-            string logBoi = $"Withdrawl: {amount}C2";
+            string logBoi = $"Withdrawl: {amount:C2}";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }

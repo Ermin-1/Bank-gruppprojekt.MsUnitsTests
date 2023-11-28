@@ -70,7 +70,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 6);
+            } while (option != 7);
         }
     }
 }

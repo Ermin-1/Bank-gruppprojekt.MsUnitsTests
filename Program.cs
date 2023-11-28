@@ -10,7 +10,7 @@ namespace BankApplication
         static void Main(string[] args)
         {
             LogClass log = new LogClass();
-            List<User> allUsers = new List<User>();
+            List<Customer> allUsers = new List<Customer>();
             LogIn.LoginIn(log, allUsers);           
         }        
     }

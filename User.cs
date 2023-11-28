@@ -11,33 +11,19 @@ namespace Bank_gruppprojekt
 {
     public class User
     {
-        public double MaxLoan { get; set; }
         public string Username { get; set; }
         public int Pin { get; set; }
+        public double MaxLoan { get; set; }
+       
         public bool IsAdmin { get; set; }
 
-        public List<Account> Accounts { get; set; }        
-        public User(string username, int pin, bool isAdmin = false)
+               
+        public User (string userName, int pin, bool isAdmin = false)
         {
-            Username = username;
+            Username = userName;
             Pin = pin;
             IsAdmin = isAdmin;
-            Accounts = new List<Account>();          
-        }
-        
-
-        public void AddAccount(string accountType, double initialBalance, string currency)
-        {
-            Accounts.Add(new Account(accountType, initialBalance, currency));
-        }
-        public void DisplayAccounts(User user)
-        {
-            Console.WriteLine("Accounts:");
-            for (int i = 0; i < user.Accounts.Count; i++)
-            {
-                Console.WriteLine($"{i}. {user.Accounts[i].Accounttype}");
-            }
-        }
-      
+                     
+        }    
     }
 }

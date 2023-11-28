@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Administrator
+    public class Administrator : User
     {
-        public Administrator()
+        public Administrator(string userName, int pin) : base(userName, pin)
         {
 
         }
 
-        public void AdminCreateUser(User adminUser)
+        public void AdminCreateUser(Customer adminUser)
         {
             if (adminUser == null || !adminUser.IsAdmin)
             {
@@ -35,7 +35,7 @@ namespace Bank_gruppprojekt
                 return;
             }
 
-            User newUser = CreateUser(username, pin);
+            Customer newUser = CreateUser(username, pin);
 
             if (newUser != null)
             {
@@ -47,7 +47,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public User CreateUser(string username, int pin)
+        public Customer CreateUser(string username, int pin)
         {
             if (string.IsNullOrWhiteSpace(username) || !username.All(char.IsLetter) || pin < 1000 || pin > 9999)
             {
@@ -55,17 +55,74 @@ namespace Bank_gruppprojekt
                 return null;
             }
 
-            if (UserAccountManager.GetUsersWithAccounts().Any(u => u.Username == username))
+            if (CustomerAccountManager.GetUsersWithAccounts().Any(u => u.Username == username))
             {
                 Console.WriteLine($"Username '{username}' is already taken. Please choose a different username.");
                 return null;
             }
 
-            User newUser = new User(username, pin);
+            Customer newUser = new Customer(username, pin);
 
             Console.WriteLine($"New user created: {newUser.Username} with PIN: {pin}");
 
             return newUser;
+        }
+
+        public static void Menu(Customer currentUser, ILog log, List<Customer> allUsers)
+        {
+            Console.Clear();
+            Console.WriteLine($"Welcome {currentUser.Username}");
+            int option = 0;
+
+            do
+            {
+                PrintOptions();
+                try
+                {
+                    if (int.TryParse(Console.ReadLine(), out option))
+                    {
+                        switch (option)
+                        {
+                            case 1:
+                                //Deposit(currentUser, log);
+                                break;
+                           
+                            case 2:
+                                //Administrator admin = new Administrator();
+                                //admin.AdminCreateUser(currentUser);
+                                break;
+                            case 3:
+                                Console.WriteLine("Exiting...");
+                                LogIn.LoginIn(log, allUsers);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid option. Try again.");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+            } while (option != 8);
+        }
+
+        public static void PrintOptions()
+        {
+            Console.WriteLine("Choose from the menu");
+            Console.WriteLine("1. Deposit");
+            Console.WriteLine("2. Withdrawal");
+            Console.WriteLine("3. Show balance");
+            Console.WriteLine("4. Add new account");
+            Console.WriteLine("5. Transfer money");
+            Console.WriteLine("6. Check history of withdrawls and deposits");
+            Console.WriteLine("7. Create User [ADMIN]");
+            Console.WriteLine("8. Exit");
         }
     }
 }

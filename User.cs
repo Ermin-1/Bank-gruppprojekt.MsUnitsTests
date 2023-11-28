@@ -14,11 +14,14 @@ namespace Bank_gruppprojekt
         public double MaxLoan { get; set; }
         public string Username { get; set; }
         public int Pin { get; set; }
+        public bool IsAdmin { get; set; }
+
         public List<Account> Accounts { get; set; }        
-        public User(string username, int pin)
+        public User(string username, int pin, bool isAdmin = false)
         {
             Username = username;
             Pin = pin;
+            IsAdmin = isAdmin;
             Accounts = new List<Account>();          
         }
         

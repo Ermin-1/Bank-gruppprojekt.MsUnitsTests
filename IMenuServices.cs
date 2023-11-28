@@ -17,7 +17,8 @@ namespace Bank_gruppprojekt
             Console.WriteLine("4. Add new account");
             Console.WriteLine("5. Transfer money");
             Console.WriteLine("6. Check history of withdrawls and deposits");
-            Console.WriteLine("7. Exit");
+            Console.WriteLine("7. Create User [ADMIN]");
+            Console.WriteLine("8. Exit");
         }
         public static void Menu(User currentUser, ILog log, List<User> allUsers)
         {
@@ -53,6 +54,10 @@ namespace Bank_gruppprojekt
                                 PrintLogBois(log);
                                 break;
                             case 7:
+                                Administrator admin = new Administrator();
+                                admin.AdminCreateUser(currentUser);
+                                break;
+                            case 8:
                                 Console.WriteLine("Exiting...");
                                 LogIn.LoginIn(log, allUsers);
                                 break;
@@ -70,7 +75,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 7);
+            } while (option != 8);
         }
     }
 }

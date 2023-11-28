@@ -15,10 +15,10 @@ namespace Bank_gruppprojekt
             
             users = new List<User>
         {
-            new User("Ermin", 1111),
-            new User("Oskar", 1234),
-            new User("Ludde", 3545),
-            new User("Isac", 4355)
+            new User("Ermin", 1111, true),
+            new User("Oskar", 1234, false),
+            new User("Ludde", 3545, true),
+            new User("Isac", 4355, false)
         };
 
             users[0].Accounts.Add(new Account("USA-account", 2000, "USD"));

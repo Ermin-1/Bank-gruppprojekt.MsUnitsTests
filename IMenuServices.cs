@@ -19,7 +19,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("6. Check history of withdrawls and deposits");
             Console.WriteLine("7. Exit");
         }
-        public static void Menu(User currentUser, ILog log)
+        public static void Menu(User currentUser, ILog log, List<User> allUsers)
         {
             Console.Clear();
             Console.WriteLine($"Welcome {currentUser.Username}");
@@ -47,14 +47,14 @@ namespace Bank_gruppprojekt
                                 AddNewAccount(currentUser);
                                 break;
                             case 5:
-                                TransferMoney(currentUser);
+                                TransferMoney(currentUser, allUsers);
                                 break;
                             case 6:
                                 PrintLogBois(log);
                                 break;
                             case 7:
                                 Console.WriteLine("Exiting...");
-                                LogIn.LoginIn(log);
+                                LogIn.LoginIn(log, allUsers);
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");

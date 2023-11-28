@@ -9,7 +9,7 @@ namespace Bank_gruppprojekt
     public interface IBankServices
     {        
 
-        public static void Deposit(User currentUser)
+        public static void Deposit(User currentUser, double ammount)
         {
             Console.WriteLine("Which account do you want to deposit into?");
             currentUser.DisplayAccounts(currentUser);
@@ -19,6 +19,7 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("How much money do you want to deposit?");
                 if (double.TryParse(Console.ReadLine(), out double deposit))
                 {
+
                     currentUser.Accounts[accountIndex].Balance += deposit;
                     Console.WriteLine($"Your new balance for {currentUser.Accounts[accountIndex].Accounttype} account is {currentUser.Accounts[accountIndex].Balance:C2}");
                 }

@@ -19,7 +19,7 @@ namespace Bank_gruppprojekt
         public static Customer LoginIn(ILog log, List<Customer> allUsers)
         {
             Console.Clear();
-            GetUsersWithAccounts();
+            GetCustomerWithAccounts();
             Console.WriteLine("Welcome to the bank");
             string username = "";
             Customer currentUser = null;

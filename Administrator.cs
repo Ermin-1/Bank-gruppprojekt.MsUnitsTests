@@ -55,7 +55,7 @@ namespace Bank_gruppprojekt
                 return null;
             }
 
-            if (CustomerAccountManager.GetUsersWithAccounts().Any(u => u.Username == username))
+            if (CustomerAccountManager.GetCustomerWithAccounts().Any(u => u.Username == username))
             {
                 Console.WriteLine($"Username '{username}' is already taken. Please choose a different username.");
                 return null;

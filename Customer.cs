@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Channels;
@@ -88,7 +89,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Accounts:");
             for (int i = 0; i < customer.Accounts.Count; i++)
             {
-                Console.WriteLine($"{i}. {customer.Accounts[i].Accounttype}");
+                Console.WriteLine($"{i +1}. {customer.Accounts[i].Accounttype}");
             }
         }
 
@@ -295,13 +296,13 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Which account do you want to transfer money from?");
             currentCustomer.DisplayAccounts(currentCustomer);
 
-            if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < currentCustomer.Accounts.Count)
+            if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex > 0 && fromAccountIndex <= currentCustomer.Accounts.Count)
             {
                 Console.WriteLine("How much money do you want to transfer?");
 
                 if (double.TryParse(Console.ReadLine(), out double transferAmount))
                 {
-                    if (currentCustomer.Accounts[fromAccountIndex].Balance < transferAmount)
+                    if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
                     {
                         Console.WriteLine("Insufficient funds for the selected account.");
                     }
@@ -310,13 +311,14 @@ namespace Bank_gruppprojekt
                         Console.WriteLine("Which account do you want to transfer money to?");
                         currentCustomer.DisplayAccounts(currentCustomer);
 
-                        if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < currentCustomer.Accounts.Count)
+                        if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
                         {
-                            currentCustomer.Accounts[fromAccountIndex].Balance -= transferAmount;
-                            currentCustomer.Accounts[toAccountIndex].Balance += transferAmount;
+                            currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                            currentCustomer.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex].Balance:C2}");
-                            Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex].Accounttype} account is {currentCustomer.Accounts[toAccountIndex].Balance:C2}");
+                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                            Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+                            
                         }
                         else
                         {
@@ -335,24 +337,25 @@ namespace Bank_gruppprojekt
             }
         }
 
+
         private static void TransferToAnotherUser(Customer currentCustomer)
         {
             Console.WriteLine("Which user do you want to transfer money to?");
             DisplayCustomer(Customers);
 
-            if (int.TryParse(Console.ReadLine(), out int toCustomerIndex) && toCustomerIndex >= 0 && toCustomerIndex < Customers.Count)
+            if (int.TryParse(Console.ReadLine(), out int toCustomerIndex) && toCustomerIndex > 0 && toCustomerIndex <= Customers.Count)
             {
-                Customer receiver = Customers[toCustomerIndex];
+                Customer receiver = Customers[toCustomerIndex - 1];
 
                 Console.WriteLine("Which account do you want to transfer money from?");
                 currentCustomer.DisplayAccounts(currentCustomer);
 
-                if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex >= 0 && fromAccountIndex < receiver.Accounts.Count)
+                if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex > 0 && fromAccountIndex <= currentCustomer.Accounts.Count)
                 {
-                    Console.WriteLine($"How much money do you want to transfer from {currentCustomer.Accounts[fromAccountIndex].Accounttype}?");
+                    Console.WriteLine($"How much money do you want to transfer from {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype}?");
                     if (double.TryParse(Console.ReadLine(), out double transferAmount))
                     {
-                        if (currentCustomer.Accounts[fromAccountIndex].Balance < transferAmount)
+                        if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
                         {
                             Console.WriteLine("Insufficient funds for the selected account.");
                         }
@@ -361,13 +364,13 @@ namespace Bank_gruppprojekt
                             Console.WriteLine("Which account do you want to transfer money to?");
                             currentCustomer.DisplayAccounts(receiver);
 
-                            if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex >= 0 && toAccountIndex < receiver.Accounts.Count)
+                            if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {
-                                currentCustomer.Accounts[fromAccountIndex].Balance -= transferAmount;
-                                receiver.Accounts[toAccountIndex].Balance += transferAmount;
+                                currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                                receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex].Balance:C2}");
-                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex].Accounttype} account is {receiver.Accounts[toAccountIndex].Balance:C2}");
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance:C2}");
+                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance:2}");
                             }
                             else
                             {
@@ -395,7 +398,7 @@ namespace Bank_gruppprojekt
         {
             for (int i = 0; i < customers.Count; i++)
             {
-                Console.WriteLine($"{i}. {customers[i].Username}");
+                Console.WriteLine($"{i + 1}. {customers[i].Username}");
             }
         }
 
@@ -416,7 +419,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("3. Show balance");
             Console.WriteLine("4. Add new account");
             Console.WriteLine("5. Transfer money");
-            Console.WriteLine("6. Check history of withdrawls and deposits");            
+            Console.WriteLine("6. Check history of withdrawls and deposits");
             Console.WriteLine("7. Exit");
         }        
 

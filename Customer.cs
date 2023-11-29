@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Bank_gruppprojekt
         public List<Account> Accounts { get; set; }
 
         private static List<Customer> Customers;
+
+
 
         static Customer()
         {
@@ -341,7 +344,7 @@ namespace Bank_gruppprojekt
         private static void TransferToAnotherUser(Customer currentCustomer)
         {
             Console.WriteLine("Which user do you want to transfer money to?");
-            DisplayCustomer(Customers);
+            DisplayCustomer(Customers, currentCustomer);
 
             if (int.TryParse(Console.ReadLine(), out int toCustomerIndex) && toCustomerIndex > 0 && toCustomerIndex <= Customers.Count)
             {
@@ -394,11 +397,13 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void DisplayCustomer(List<Customer> customers)
+        public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
         {
-            for (int i = 0; i < customers.Count; i++)
+            var otherCustomer = customers.Where(customer => customer.Username != currentCustomer.Username).ToList();
+            foreach (var customer in otherCustomer)
             {
-                Console.WriteLine($"{i + 1}. {customers[i].Username}");
+                var index = customers.IndexOf(customer);
+                Console.WriteLine($"{index + 1}. {customers[index].Username}");
             }
         }
 

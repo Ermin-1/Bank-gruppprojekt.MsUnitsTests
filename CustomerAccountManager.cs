@@ -40,7 +40,7 @@ namespace Bank_gruppprojekt
             Customers[3].Accounts.Add(new Account("Cs skins", 25000, "SEK"));
         }
 
-        public static List<Customer> GetUsersWithAccounts()
+        public static List<Customer> GetCustomerWithAccounts()
         {
             return Customers;
         }

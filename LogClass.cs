@@ -9,16 +9,16 @@ namespace Bank_gruppprojekt
     internal class LogClass : ILog
     {
         private List<string> logActivity = new List<string>();
-        public void LogDeposit(double amount)
+        public void LogDeposit(double amount, string currency)
         {
-            string logBoi = $"Deposit: {amount:C2}";
+            string logBoi = $"Deposit: {amount}{currency}";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }
 
-        public void LogWithdraw(double amount)
+        public void LogWithdraw(double amount, string currency)
         {
-            string logBoi = $"Withdrawl: {amount:C2}";
+            string logBoi = $"Withdrawl: {amount}{currency}";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }

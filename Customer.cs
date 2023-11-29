@@ -65,7 +65,7 @@ namespace Bank_gruppprojekt
                     currentCustomer.Accounts[accountIndex].Balance += deposit;
                     Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-                    log.LogDeposit(deposit);
+                    log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex].Currency);
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace Bank_gruppprojekt
                         currentCustomer.Accounts[accountIndex].Balance -= withdrawal;
                         Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-                        log.LogWithdraw(withdrawal);
+                        log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex].Currency);
                     }
                 }
                 else

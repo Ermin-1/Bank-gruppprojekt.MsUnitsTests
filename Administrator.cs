@@ -86,7 +86,7 @@ namespace Bank_gruppprojekt
         {
             
             Console.Clear();
-            Console.WriteLine($"Welcome {currentAdmin.Username}, you are in the Admin Menu.");
+            Console.WriteLine($"Welcome Adminstrator {currentAdmin.Username}, you are in the Admin Menu.");
             int option = 0;
 
             do
@@ -99,13 +99,9 @@ namespace Bank_gruppprojekt
                         switch (option)
                         {
                             case 1:
-                              
-                                break;
-                           
-                            case 2:
                                 currentAdmin.AdminCreateUser(currentAdmin);
                                 break;
-                            case 3:
+                            case 2:
                                 Console.WriteLine("Exiting...");
                                 break;
                             default:
@@ -122,15 +118,14 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 3);
+            } while (option != 2);
         }
 
         public static void PrintOptions()
         {
             Console.WriteLine("Choose from the menu");
-            Console.WriteLine("1. ");
-            Console.WriteLine("2. Create User");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("1. Create User");
+            Console.WriteLine("2. Exit");
         }
         public static Administrator AuthenticateAdministrator(string username, int pin)
         {

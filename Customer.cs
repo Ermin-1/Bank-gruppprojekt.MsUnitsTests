@@ -48,7 +48,7 @@ namespace Bank_gruppprojekt
             Customers[3].Accounts.Add(new Account("Cs skins", 25000, "SEK"));
         }
 
-        public Customer (string userName, string pin) : base (userName, pin)
+        public Customer(string userName, string pin) : base(userName, pin)
         {
             Username = userName;
             Pin = pin;
@@ -96,7 +96,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Accounts:");
             for (int i = 0; i < customer.Accounts.Count; i++)
             {
-                Console.WriteLine($"{i +1}. {customer.Accounts[i].Accounttype}");
+                Console.WriteLine($"{i + 1}. {customer.Accounts[i].Accounttype}");
             }
         }
 
@@ -140,7 +140,7 @@ namespace Bank_gruppprojekt
 
             if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
             {
-                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex-1].Accounttype} account is {currentCustomer.Accounts[accountIndex-1].Balance} {currentCustomer.Accounts[accountIndex - 1].Currency}");
+                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance} {currentCustomer.Accounts[accountIndex - 1].Currency}");
             }
             else
             {
@@ -181,7 +181,7 @@ namespace Bank_gruppprojekt
 
         public static void Menu(Customer currentCustomer)
         {
-            
+
             Console.Clear();
             Console.WriteLine($"Welcome {currentCustomer.Username}");
             int option = 0;
@@ -213,10 +213,10 @@ namespace Bank_gruppprojekt
                                 break;
                             case 6:
                                 PrintLog(currentCustomer);
-                                break;                          
+                                break;
                             case 7:
                                 Console.WriteLine("Exiting...");
-                                
+
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
@@ -237,7 +237,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 7);
+            } while (option != 8);
         }
 
         public static void AddNewAccount(Customer currentCustomer)
@@ -310,7 +310,7 @@ namespace Bank_gruppprojekt
 
                             Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
                             Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
-                            
+
                         }
                         else
                         {
@@ -397,7 +397,55 @@ namespace Bank_gruppprojekt
             }
         }
 
-        
+        public static void Loan(Customer currentCustomer)
+        {
+            Console.WriteLine("Select the account you want to loan money to:");
+            currentCustomer.DisplayAccounts(currentCustomer);
+
+            if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
+            {
+                int accountIndex = selectedAccountIndex - 1;
+
+                Console.WriteLine("Enter the amount you want to borrow:");
+
+                if (double.TryParse(Console.ReadLine(), out double loanAmount))
+                {
+                    double maxLoanAmount = currentCustomer.GetMaxLoanAmount();
+
+                    if (loanAmount <= maxLoanAmount)
+                    {
+                        currentCustomer.DepositLoan(loanAmount, accountIndex);
+                        Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Loan amount exceeds the maximum limit. Maximum allowed loan is {maxLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+            }
+        }
+
+        private double GetMaxLoanAmount()
+        {
+            const double loanLimitMultiplier = 5.0;
+            double totalBalance = Accounts.Sum(account => account.Balance);
+            return totalBalance * loanLimitMultiplier;
+        }
+
+        private void DepositLoan(double loanAmount, int accountIndex)
+        {
+            Accounts[accountIndex].Balance += loanAmount;
+        }
+
+
         public void LogDeposit(double amount, string currency)
         {
             string logBoi = $"Deposit: {amount}{currency}";
@@ -413,7 +461,7 @@ namespace Bank_gruppprojekt
         }
 
         public static void PrintLog(Customer currentCustomer)
-        {    currentCustomer.GetLog();       
+        { currentCustomer.GetLog();
             foreach (var logboi in currentCustomer.logActivity)
             {
                 Console.WriteLine(logboi);
@@ -434,7 +482,8 @@ namespace Bank_gruppprojekt
             Console.WriteLine("4. Add new account");
             Console.WriteLine("5. Transfer money");
             Console.WriteLine("6. Check history of withdrawls and deposits");
-            Console.WriteLine("7. Exit");
+            Console.WriteLine("7. Loan para");
+            Console.WriteLine("8. Exit");
         }
 
         public static string GetPin()
@@ -445,6 +494,7 @@ namespace Bank_gruppprojekt
     }
 
 }
+
         
 
     

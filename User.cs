@@ -14,16 +14,72 @@ namespace Bank_gruppprojekt
         public string Username { get; set; }
         public int Pin { get; set; }
         public double MaxLoan { get; set; }
-       
-        public bool IsAdmin { get; set; }
 
-               
-        public User (string userName, int pin, bool isAdmin = false)
+        public const int MaxLoginAttempts = 3;
+
+        public User(string userName, int pin)
         {
             Username = userName;
             Pin = pin;
-            IsAdmin = isAdmin;
-                     
-        }    
+        } 
+        
+        public static User LoginIn()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to the bank");
+            int loginAttempts = 0;
+            User authenticatedUser = null;
+
+            while (loginAttempts < MaxLoginAttempts)
+            {
+                try
+                {
+                    Console.WriteLine("Enter username: ");
+                    string username = Console.ReadLine();
+                    Console.WriteLine("Enter PIN: ");
+                    string pin = Console.ReadLine();
+
+                    authenticatedUser = Customer.AuthenticateCustomer(username, pin);
+
+                    if (authenticatedUser == null)
+                    {
+                        authenticatedUser = Administrator.AuthenticateAdministrator(username, pin);
+                    }
+
+                    if (authenticatedUser != null)
+                    {
+                        Console.WriteLine($"Authenticated as: {authenticatedUser.GetType().Name}");
+                        Thread.Sleep(3000);
+                        if (authenticatedUser is Customer)
+                        {
+                            Customer.Menu((Customer)authenticatedUser);
+                        }
+                        else if (authenticatedUser is Administrator)
+                        {
+                            Administrator.Menu((Administrator)authenticatedUser);
+                        }                        
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Authentication failed for user '{username}'. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                        loginAttempts++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"Authentication failed. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                    loginAttempts++;
+                }
+                if (loginAttempts == MaxLoginAttempts)
+                {
+                    Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
+                    Thread.Sleep(2000);
+                    break;
+                }
+            }
+            return authenticatedUser;
+        }        
     }
 }
+

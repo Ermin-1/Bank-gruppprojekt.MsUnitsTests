@@ -7,45 +7,56 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Administrator : User
+    public class Administrator : User , ILogInServices
     {
+        public const int MaxLoginAttempts = 3;
         public Administrator(string userName, int pin) : base(userName, pin)
         {
 
         }
 
-        public void AdminCreateUser(Customer adminUser)
+        private static List<Administrator> Administrators;
+        static Administrator()
         {
-            if (adminUser == null || !adminUser.IsAdmin)
+
+            Administrators = new List<Administrator>
             {
-                Console.WriteLine("Insufficient privileges. Only admins can create users.");
-                return;
-            }
+            new Administrator("Karen", 0000),
 
-            Console.WriteLine("Admin Console - Create New User");
-            Console.WriteLine("-------------------------------");
-
-            Console.Write("Enter username of new User (letters only): ");
-            string username = Console.ReadLine();
-
-            Console.Write("Enter four-digit PIN: ");
-            if (!int.TryParse(Console.ReadLine(), out int pin))
-            {
-                Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
-                return;
-            }
-
-            Customer newUser = CreateUser(username, pin);
-
-            if (newUser != null)
-            {
-                Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
-            }
-            else
-            {
-                Console.WriteLine("User creation failed. Please check the input and try again.");
-            }
+            };
         }
+        //    public void AdminCreateUser(Administrator adminUser)
+        //    {
+        //    if (adminUser == null || !adminUser.IsAdmin)
+        //    {
+        //        Console.WriteLine("Insufficient privileges. Only admins can create users.");
+        //        return;
+        //    }
+
+        //    Console.WriteLine("Admin Console - Create New User");
+        //    Console.WriteLine("-------------------------------");
+
+        //    Console.Write("Enter username of new User (letters only): ");
+        //    string username = Console.ReadLine();
+
+        //    Console.Write("Enter four-digit PIN: ");
+        //    if (!int.TryParse(Console.ReadLine(), out int pin))
+        //    {
+        //        Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
+        //        return;
+        //    }
+
+        //    Customer newUser = CreateUser(username, pin);
+
+        //    if (newUser != null)
+        //    {
+        //        Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("User creation failed. Please check the input and try again.");
+        //    }
+        //}
 
         public Customer CreateUser(string username, int pin)
         {
@@ -68,10 +79,11 @@ namespace Bank_gruppprojekt
             return newUser;
         }
 
-        public static void Menu(Customer currentUser, ILog log, List<Customer> allUsers)
+        public static void Menu(Administrator currentAdmin)
         {
+            
             Console.Clear();
-            Console.WriteLine($"Welcome {currentUser.Username}");
+            Console.WriteLine($"Welcome King {currentAdmin.Username}");
             int option = 0;
 
             do
@@ -93,7 +105,7 @@ namespace Bank_gruppprojekt
                                 break;
                             case 3:
                                 Console.WriteLine("Exiting...");
-                                LogIn.LoginIn(log, allUsers);
+                                
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
@@ -123,6 +135,43 @@ namespace Bank_gruppprojekt
             Console.WriteLine("6. Check history of withdrawls and deposits");
             Console.WriteLine("7. Create User [ADMIN]");
             Console.WriteLine("8. Exit");
+        }
+        public static Administrator AuthenticateAdministrator(string username, int pin)
+        {
+            return Administrators.FirstOrDefault(u => u.Username == username && u.Pin == pin);
+        }
+
+        public static Administrator AuthenticateAdministrator(string username, string pin)
+        {
+            Console.WriteLine($"Attempting to authenticate administrator: {username}, PIN: {pin}");
+
+            if (int.TryParse(pin, out int pinValue))
+            {
+                Console.WriteLine($"Parsed PIN as integer: {pinValue}");
+
+                Administrator authenticatedAdministrator = Administrators.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin == pinValue);
+
+                if (authenticatedAdministrator != null)
+                {
+                    Console.WriteLine($"Authentication successful for administrator: {username}");
+                }
+                else
+                {
+                    Console.WriteLine($"Authentication failed for administrator: {username}");
+                }
+
+                return authenticatedAdministrator;
+            }
+            else
+            {
+                Console.WriteLine($"Invalid PIN format for administrator: {username}");
+                return null;
+            }
+        }
+        public static string GetPin()
+        {
+            Console.WriteLine("Enter PIN");
+            return Console.ReadLine();
         }
     }
 }

@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Customer : User, ICustomerBank, IMenuServices
+    public class Customer : User, ICustomerBank, IMenuServices, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
         public List<Account> Accounts { get; set; }
 
         private static List<Customer> Customers;
-
-
 
         static Customer()
         {
@@ -55,7 +53,7 @@ namespace Bank_gruppprojekt
             Accounts = new List<Account>();
         }
 
-        public static void Deposit(Customer currentCustomer, ILog log)
+        public static void Deposit(Customer currentCustomer/*, ILog log*/)
         {
             Console.WriteLine("Which account do you want to deposit into?");
             currentCustomer.DisplayAccounts(currentCustomer);
@@ -69,7 +67,7 @@ namespace Bank_gruppprojekt
                     currentCustomer.Accounts[accountIndex].Balance += deposit;
                     Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-                    log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex].Currency);
+                    //log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex].Currency);
                 }
                 else
                 {
@@ -96,7 +94,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void Withdraw(Customer currentCustomer, ILog log)
+        public static void Withdraw(Customer currentCustomer/*, ILog log*/)
         {
             Console.WriteLine("Which account do you want to withdraw from?");
             currentCustomer.DisplayAccounts(currentCustomer);
@@ -115,7 +113,7 @@ namespace Bank_gruppprojekt
                         currentCustomer.Accounts[accountIndex].Balance -= withdrawal;
                         Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
 
-                        log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex].Currency);
+                        //log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex].Currency);
                     }
                 }
                 else
@@ -149,56 +147,35 @@ namespace Bank_gruppprojekt
             return Customers;
         }
 
-        public static Customer AuthenticateCustomer(string username, int pin)
+        public static Customer AuthenticateCustomer(string username, string pin)
         {
-            return Customers.FirstOrDefault(u => u.Username == username && u.Pin == pin);
-        }
+            Console.WriteLine($"Attempting to authenticate customer: {username}, PIN: {pin}");
 
-        public static Customer LoginIn(ILog log, List<Customer> allUsers)
-        {
-            Console.Clear();
-            GetCustomerWithAccounts();
-            Console.WriteLine("Welcome to the bank");
-            string username = "";
-            Customer currentCustomer = null;
-            int loginAttempts = 0;
-
-            while (loginAttempts < MaxLoginAttempts)
+            if (!int.TryParse(pin, out int pinValue))
             {
-                try
-                {
-                    Console.WriteLine("Enter username: ");
-                    username = Console.ReadLine();
-                    currentCustomer = AuthenticateCustomer(username, GetPin());
-                    if (currentCustomer != null)
-                    {
-
-                        Customer.Menu(currentCustomer, log, allUsers);
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
-                        loginAttempts++;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine($"User not found or incorrect PIN. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
-                    loginAttempts++;
-                }
-                if (loginAttempts == 3)
-                {
-                    Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
-                    Thread.Sleep(2000);
-                }
+                Console.WriteLine($"Invalid PIN format for customer: {username}");
+                return null;
             }
 
-            return currentCustomer;
+            Console.WriteLine($"Parsed PIN as integer: {pinValue}");
+
+            Customer authenticatedCustomer = Customers.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin == pinValue);
+
+            if (authenticatedCustomer != null)
+            {
+                Console.WriteLine($"Authentication successful for customer: {username}");
+            }
+            else
+            {
+                Console.WriteLine($"Authentication failed for customer: {username}");
+            }
+
+            return authenticatedCustomer;
         }
 
-        public static void Menu(Customer currentCustomer, ILog log, List<Customer> allCustomers)
+        public static void Menu(Customer currentCustomer)
         {
+            
             Console.Clear();
             Console.WriteLine($"Welcome {currentCustomer.Username}");
             int option = 0;
@@ -210,13 +187,14 @@ namespace Bank_gruppprojekt
                 {
                     if (int.TryParse(Console.ReadLine(), out option))
                     {
+                        Console.Clear();
                         switch (option)
                         {
                             case 1:
-                                Deposit(currentCustomer, log);
+                                Deposit(currentCustomer);
                                 break;
                             case 2:
-                                Withdraw(currentCustomer, log);
+                                Withdraw(currentCustomer);
                                 break;
                             case 3:
                                 ShowBalance(currentCustomer);
@@ -228,16 +206,21 @@ namespace Bank_gruppprojekt
                                 TransferMoney(currentCustomer);
                                 break;
                             case 6:
-                                PrintLogBois(log);
+                                //PrintLogBois(log);
                                 break;                          
                             case 7:
                                 Console.WriteLine("Exiting...");
-                                LogIn.LoginIn(log, allCustomers);
+                                
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
                                 break;
+
                         }
+                        Console.WriteLine("");
+                        Console.WriteLine("Press enter to exit to main menú");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                     else
                     {
@@ -248,7 +231,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 8);
+            } while (option != 7);
         }
 
         public static void AddNewAccount(Customer currentCustomer)
@@ -426,12 +409,12 @@ namespace Bank_gruppprojekt
             Console.WriteLine("5. Transfer money");
             Console.WriteLine("6. Check history of withdrawls and deposits");
             Console.WriteLine("7. Exit");
-        }        
+        }
 
-        private static int GetPin()
+        public static string GetPin()
         {
             Console.WriteLine("Enter PIN");
-            return int.Parse(Console.ReadLine());
+            return Console.ReadLine();
         }
     }
 

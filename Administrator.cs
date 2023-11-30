@@ -22,41 +22,44 @@ namespace Bank_gruppprojekt
             Administrators = new List<Administrator>
             {
             new Administrator("Karen", 0000),
+            new Administrator("Admin", 7777)
 
             };
         }
-        //    public void AdminCreateUser(Administrator adminUser)
-        //    {
-        //    if (adminUser == null || !adminUser.IsAdmin)
-        //    {
-        //        Console.WriteLine("Insufficient privileges. Only admins can create users.");
-        //        return;
-        //    }
+        public void AdminCreateUser(Administrator adminUser)
+        {
+            if (adminUser == null || !Administrators.Contains(adminUser))
+            {
+                Console.WriteLine("Insufficient privileges. Only admins can create users.");
+                return;
+            }
 
-        //    Console.WriteLine("Admin Console - Create New User");
-        //    Console.WriteLine("-------------------------------");
+            Console.WriteLine("Admin Console - Create New User");
+            Console.WriteLine("-------------------------------");
 
-        //    Console.Write("Enter username of new User (letters only): ");
-        //    string username = Console.ReadLine();
+            Console.Write("Enter username of new User (letters only): ");
+            string username = Console.ReadLine();
 
-        //    Console.Write("Enter four-digit PIN: ");
-        //    if (!int.TryParse(Console.ReadLine(), out int pin))
-        //    {
-        //        Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
-        //        return;
-        //    }
+            Console.Write("Enter four-digit PIN: ");
+            if (!int.TryParse(Console.ReadLine(), out int pin))
+            {
+                Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
+                return;
+            }
 
-        //    Customer newUser = CreateUser(username, pin);
+            Customer newUser = CreateUser(username, pin);
 
-        //    if (newUser != null)
-        //    {
-        //        Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("User creation failed. Please check the input and try again.");
-        //    }
-        //}
+            if (newUser != null)
+            {
+                Customer.AddUser(newUser); // Add the new user to the Customers list
+                Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
+            }
+            else
+            {
+                Console.WriteLine("User creation failed. Please check the input and try again.");
+            }
+        }
+
 
         public Customer CreateUser(string username, int pin)
         {
@@ -83,7 +86,7 @@ namespace Bank_gruppprojekt
         {
             
             Console.Clear();
-            Console.WriteLine($"Welcome King {currentAdmin.Username}");
+            Console.WriteLine($"Welcome {currentAdmin.Username}, you are in the Admin Menu.");
             int option = 0;
 
             do
@@ -96,16 +99,14 @@ namespace Bank_gruppprojekt
                         switch (option)
                         {
                             case 1:
-                                //Deposit(currentUser, log);
+                              
                                 break;
                            
                             case 2:
-                                //Administrator admin = new Administrator();
-                                //admin.AdminCreateUser(currentUser);
+                                currentAdmin.AdminCreateUser(currentAdmin);
                                 break;
                             case 3:
                                 Console.WriteLine("Exiting...");
-                                
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
@@ -121,20 +122,15 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 8);
+            } while (option != 3);
         }
 
         public static void PrintOptions()
         {
             Console.WriteLine("Choose from the menu");
-            Console.WriteLine("1. Deposit");
-            Console.WriteLine("2. Withdrawal");
-            Console.WriteLine("3. Show balance");
-            Console.WriteLine("4. Add new account");
-            Console.WriteLine("5. Transfer money");
-            Console.WriteLine("6. Check history of withdrawls and deposits");
-            Console.WriteLine("7. Create User [ADMIN]");
-            Console.WriteLine("8. Exit");
+            Console.WriteLine("1. ");
+            Console.WriteLine("2. Create User");
+            Console.WriteLine("3. Exit");
         }
         public static Administrator AuthenticateAdministrator(string username, int pin)
         {

@@ -53,6 +53,11 @@ namespace Bank_gruppprojekt
             Accounts = new List<Account>();
         }
 
+        public static void AddUser(Customer customer)
+        {
+            Customers.Add(customer);
+        }
+
         public static void Deposit(Customer currentCustomer/*, ILog log*/)
         {
             Console.WriteLine("Which account do you want to deposit into?");

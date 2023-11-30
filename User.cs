@@ -12,12 +12,12 @@ namespace Bank_gruppprojekt
     public class User
     {
         public string Username { get; set; }
-        public int Pin { get; set; }
+        public string Pin { get; set; }
         public double MaxLoan { get; set; }
 
         public const int MaxLoginAttempts = 3;
 
-        public User(string userName, int pin)
+        public User(string userName, string pin)
         {
             Username = userName;
             Pin = pin;

@@ -23,10 +23,10 @@ namespace Bank_gruppprojekt
 
             Customers = new List<Customer>
         {
-            new Customer("Ermin", 1111),
-            new Customer("Oskar", 1234),
-            new Customer("Ludde", 3545),
-            new Customer("Isac", 4355)
+            new Customer("Ermin", "1111"),
+            new Customer("Oskar", "1234"),
+            new Customer("Ludde", "3545"),
+            new Customer("Isac", "4355")
         };
 
             Customers[0].Accounts.Add(new Account("USA-account", 2000, "USD"));
@@ -48,7 +48,7 @@ namespace Bank_gruppprojekt
             Customers[3].Accounts.Add(new Account("Cs skins", 25000, "SEK"));
         }
 
-        public Customer (string userName, int pin) : base (userName, pin)
+        public Customer (string userName, string pin) : base (userName, pin)
         {
             Username = userName;
             Pin = pin;

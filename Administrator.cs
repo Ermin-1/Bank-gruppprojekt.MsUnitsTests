@@ -10,7 +10,7 @@ namespace Bank_gruppprojekt
     public class Administrator : User, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
-        public Administrator(string userName, int pin) : base(userName, pin)
+        public Administrator(string userName, string pin) : base(userName, pin)
         {
 
         }
@@ -21,8 +21,8 @@ namespace Bank_gruppprojekt
 
             Administrators = new List<Administrator>
             {
-            new Administrator("Karen", 0000),
-            new Administrator("Admin", 7777)
+            new Administrator("Karen", "0000"),
+            new Administrator("Admin", "7777")
 
             };
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Administrator : User , ILogInServices
+    public class Administrator : User, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
         public Administrator(string userName, int pin) : base(userName, pin)
@@ -63,9 +63,9 @@ namespace Bank_gruppprojekt
 
         public Customer CreateUser(string username, int pin)
         {
-            if (string.IsNullOrWhiteSpace(username) || !username.All(char.IsLetter) || pin < 1000 || pin > 9999)
+            if (string.IsNullOrWhiteSpace(username) || username.Count(char.IsLetter) < 2 || (pin < 0000 || pin > 9999) || pin.ToString().Length != 4)
             {
-                Console.WriteLine("Invalid input for creating a new user. Please provide a valid username and a four-digit PIN.");
+                Console.WriteLine("Invalid input for creating a new user. Please provide a valid username with atleast two letters and a four-digit PIN 0000-9999");
                 return null;
             }
 
@@ -82,11 +82,13 @@ namespace Bank_gruppprojekt
             return newUser;
         }
 
+
+
         public static void Menu(Administrator currentAdmin)
         {
-            
+
             Console.Clear();
-            Console.WriteLine($"Welcome Adminstrator {currentAdmin.Username}, you are in the Admin Menu.");
+            Console.WriteLine($"Welcome Administrator {currentAdmin.Username}, you are in the Admin Menu.");
             int option = 0;
 
             do

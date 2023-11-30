@@ -153,6 +153,11 @@ namespace Bank_gruppprojekt
             return Customers;
         }
 
+        //public static Customer AuthenticateCustomer(string username, string pin)
+        //{
+        //    return Customers.FirstOrDefault(u => u.Username == username && u.Pin == pin);
+        //}
+
         public static Customer AuthenticateCustomer(string username, string pin)
         {
             Console.WriteLine($"Attempting to authenticate customer: {username}, PIN: {pin}");
@@ -165,7 +170,7 @@ namespace Bank_gruppprojekt
 
             Console.WriteLine($"Parsed PIN as integer: {pinValue}");
 
-            Customer authenticatedCustomer = Customers.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin == pinValue);
+            Customer authenticatedCustomer = Customers.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin.ToString() == pin);
 
             if (authenticatedCustomer != null)
             {
@@ -215,6 +220,9 @@ namespace Bank_gruppprojekt
                                 PrintLog(currentCustomer);
                                 break;
                             case 7:
+                                Loan(currentCustomer);
+                                break;
+                            case 8:
                                 Console.WriteLine("Exiting...");
 
                                 break;

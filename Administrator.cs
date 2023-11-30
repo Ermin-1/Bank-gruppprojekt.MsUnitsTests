@@ -39,9 +39,9 @@ namespace Bank_gruppprojekt
 
             Console.Write("Enter username of new User (letters only): ");
             string username = Console.ReadLine();
-
-            Console.Write("Enter four-digit PIN: ");
-            if (!int.TryParse(Console.ReadLine(), out int pin))
+            Console.Write("Enter a four digit pin code (numbers only): ");
+            string pin = Console.ReadLine();
+            if (pin.Length != 4 || !int.TryParse(pin, out _))
             {
                 Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
                 return;
@@ -61,15 +61,15 @@ namespace Bank_gruppprojekt
         }
 
 
-        public Customer CreateUser(string username, int pin)
+        public Customer CreateUser(string username, string pin)
         {
-            if (string.IsNullOrWhiteSpace(username) || username.Count(char.IsLetter) < 2 || (pin < 0000 || pin > 9999) || pin.ToString().Length != 4)
+            if (string.IsNullOrWhiteSpace(username) || username.Count(char.IsLetter) < 2 || pin.Length != 4 || !pin.All(char.IsDigit))
             {
                 Console.WriteLine("Invalid input for creating a new user. Please provide a valid username with atleast two letters and a four-digit PIN 0000-9999");
                 return null;
             }
 
-            if (CustomerAccountManager.GetCustomerWithAccounts().Any(u => u.Username == username))
+            if (Customer.GetCustomerWithAccounts().Any(u => u.Username == username))
             {
                 Console.WriteLine($"Username '{username}' is already taken. Please choose a different username.");
                 return null;
@@ -129,10 +129,10 @@ namespace Bank_gruppprojekt
             Console.WriteLine("1. Create User");
             Console.WriteLine("2. Exit");
         }
-        public static Administrator AuthenticateAdministrator(string username, int pin)
-        {
-            return Administrators.FirstOrDefault(u => u.Username == username && u.Pin == pin);
-        }
+        //public static Administrator AuthenticateAdministrator(string username, string pin)
+        //{
+        //    return Administrators.FirstOrDefault(u => u.Username == username && u.Pin == pin);
+        //}
 
         public static Administrator AuthenticateAdministrator(string username, string pin)
         {
@@ -142,7 +142,7 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine($"Parsed PIN as integer: {pinValue}");
 
-                Administrator authenticatedAdministrator = Administrators.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin == pinValue);
+                Administrator authenticatedAdministrator = Administrators.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin.ToString() == pin);
 
                 if (authenticatedAdministrator != null)
                 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Channels;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Customer : User, ICustomerBank, IMenuServices, ILogInServices
+    public class Customer : User, ICustomerBank, IMenuServices, ILogInServices, ILog
     {
         public const int MaxLoginAttempts = 3;
         public List<Account> Accounts { get; set; }
 
         private static List<Customer> Customers;
 
+        private List<string> logActivity = new List<string>();
         static Customer()
         {
 
@@ -58,7 +60,7 @@ namespace Bank_gruppprojekt
             Customers.Add(customer);
         }
 
-        public static void Deposit(Customer currentCustomer/*, ILog log*/)
+        public static void Deposit(Customer currentCustomer)
         {
             Console.WriteLine("Which account do you want to deposit into?");
             currentCustomer.DisplayAccounts(currentCustomer);
@@ -71,7 +73,7 @@ namespace Bank_gruppprojekt
                     currentCustomer.Accounts[accountIndex - 1].Balance += deposit;
                     Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
 
-                    //log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex - 1].Currency);
+                    currentCustomer.LogDeposit(deposit, currentCustomer.Accounts[accountIndex - 1].Currency);
                 }
                 else
                 {
@@ -98,7 +100,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void Withdraw(Customer currentCustomer/*, ILog log*/)
+        public static void Withdraw(Customer currentCustomer)
         {
             Console.WriteLine("Which account do you want to withdraw from?");
             currentCustomer.DisplayAccounts(currentCustomer);
@@ -117,7 +119,7 @@ namespace Bank_gruppprojekt
                         currentCustomer.Accounts[accountIndex - 1].Balance -= withdrawal;
                         Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
 
-                        //log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex - 1].Currency);
+                        currentCustomer.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex - 1].Currency);
                     }
                 }
                 else
@@ -210,7 +212,7 @@ namespace Bank_gruppprojekt
                                 TransferMoney(currentCustomer);
                                 break;
                             case 6:
-                                //PrintLogBois(log);
+                                PrintLog(currentCustomer);
                                 break;                          
                             case 7:
                                 Console.WriteLine("Exiting...");
@@ -308,6 +310,7 @@ namespace Bank_gruppprojekt
 
                             Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
                             Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+                            
                         }
                         else
                         {
@@ -394,13 +397,32 @@ namespace Bank_gruppprojekt
             }
         }
 
-        public static void PrintLogBois(ILog log)
+        
+        public void LogDeposit(double amount, string currency)
         {
-            List<string> loggersPoggers = log.GetLogBois();
-            foreach (var logboi in loggersPoggers)
+            string logBoi = $"Deposit: {amount}{currency}";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
+
+        public void LogWithdraw(double amount, string currency)
+        {
+            string logBoi = $"Withdrawl: {amount}{currency}";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
+
+        public static void PrintLog(Customer currentCustomer)
+        {    currentCustomer.GetLog();       
+            foreach (var logboi in currentCustomer.logActivity)
             {
                 Console.WriteLine(logboi);
             }
+        }
+
+        public List<string> GetLog()
+        {
+            return logActivity;
         }
 
         public static void PrintOptions()

@@ -8,8 +8,8 @@ namespace Bank_gruppprojekt
 {
     public interface ILog
     {
-        List<string> GetLogBois();
+        List<string> GetLog();
         void LogDeposit(double ammount, string currency);
-        void LogWithdraw(double ammount, string currency);
+        void LogWithdraw(double ammount, string currency);        
     }
 }

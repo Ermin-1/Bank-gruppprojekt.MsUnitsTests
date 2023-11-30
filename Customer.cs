@@ -63,16 +63,15 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Which account do you want to deposit into?");
             currentCustomer.DisplayAccounts(currentCustomer);
 
-            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex > 0 && accountIndex <= currentCustomer.Accounts.Count)
             {
                 Console.WriteLine("How much money do you want to deposit?");
                 if (double.TryParse(Console.ReadLine(), out double deposit))
                 {
+                    currentCustomer.Accounts[accountIndex - 1].Balance += deposit;
+                    Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
 
-                    currentCustomer.Accounts[accountIndex].Balance += deposit;
-                    Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}{currentCustomer.Accounts[accountIndex].Currency}");
-
-                    //log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex].Currency);
+                    //log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex - 1].Currency);
                 }
                 else
                 {
@@ -104,21 +103,21 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Which account do you want to withdraw from?");
             currentCustomer.DisplayAccounts(currentCustomer);
 
-            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex > 0 && accountIndex <= currentCustomer.Accounts.Count)
             {
                 Console.WriteLine("How much do you want to withdraw?");
                 if (double.TryParse(Console.ReadLine(), out double withdrawal))
                 {
-                    if (currentCustomer.Accounts[accountIndex].Balance < withdrawal)
+                    if (currentCustomer.Accounts[accountIndex - 1].Balance < withdrawal)
                     {
                         Console.WriteLine("Insufficient funds");
                     }
                     else
                     {
-                        currentCustomer.Accounts[accountIndex].Balance -= withdrawal;
-                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}{currentCustomer.Accounts[accountIndex].Currency}");
+                        currentCustomer.Accounts[accountIndex - 1].Balance -= withdrawal;
+                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
 
-                        //log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex].Currency);
+                        //log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex - 1].Currency);
                     }
                 }
                 else
@@ -139,7 +138,7 @@ namespace Bank_gruppprojekt
 
             if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
             {
-                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance} {currentCustomer.Accounts[accountIndex].Currency}");
+                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex-1].Accounttype} account is {currentCustomer.Accounts[accountIndex-1].Balance} {currentCustomer.Accounts[accountIndex - 1].Currency}");
             }
             else
             {
@@ -223,7 +222,7 @@ namespace Bank_gruppprojekt
 
                         }
                         Console.WriteLine("");
-                        Console.WriteLine("Press enter to exit to main menú");
+                        Console.WriteLine("Press enter to exit to Main Menu");
                         Console.ReadLine();
                         Console.Clear();
                     }
@@ -309,7 +308,6 @@ namespace Bank_gruppprojekt
 
                             Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
                             Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
-                            
                         }
                         else
                         {
@@ -344,6 +342,7 @@ namespace Bank_gruppprojekt
                 if (int.TryParse(Console.ReadLine(), out int fromAccountIndex) && fromAccountIndex > 0 && fromAccountIndex <= currentCustomer.Accounts.Count)
                 {
                     Console.WriteLine($"How much money do you want to transfer from {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype}?");
+
                     if (double.TryParse(Console.ReadLine(), out double transferAmount))
                     {
                         if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
@@ -361,7 +360,7 @@ namespace Bank_gruppprojekt
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
                                 Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                
+                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
                             }
                             else
                             {

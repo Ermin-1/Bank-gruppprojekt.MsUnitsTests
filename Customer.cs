@@ -65,7 +65,7 @@ namespace Bank_gruppprojekt
                 {
 
                     currentCustomer.Accounts[accountIndex].Balance += deposit;
-                    Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
+                    Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}{currentCustomer.Accounts[accountIndex].Currency}");
 
                     //log.LogDeposit(deposit, currentCustomer.Accounts[accountIndex].Currency);
                 }
@@ -111,7 +111,7 @@ namespace Bank_gruppprojekt
                     else
                     {
                         currentCustomer.Accounts[accountIndex].Balance -= withdrawal;
-                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}");
+                        Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex].Accounttype} account is {currentCustomer.Accounts[accountIndex].Balance}{currentCustomer.Accounts[accountIndex].Currency}");
 
                         //log.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex].Currency);
                     }
@@ -355,8 +355,8 @@ namespace Bank_gruppprojekt
                                 currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance:C2}");
-                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance:2}");
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                                
                             }
                             else
                             {

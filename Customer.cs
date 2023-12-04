@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Bank_gruppprojekt
 {
@@ -19,8 +20,9 @@ namespace Bank_gruppprojekt
 
         private List<string> logActivity = new List<string>();
 
-        private Queue<Account> transactionQue = new Queue<Account>();
-            
+        private static Queue<Account> transactionQue = new Queue<Account>();
+
+        private Timer timer;
 
 
 
@@ -59,7 +61,9 @@ namespace Bank_gruppprojekt
             Username = userName;
             Pin = pin;
             Accounts = new List<Account>();
+            timer = new Timer(null, MakeTransaction, TimeSpan.Zero, TimeSpan.FromMinutes(15));
         }
+
         public void AddTransaction(Account transaction)
         {
             transactionQue.Enqueue(transaction);
@@ -139,7 +143,6 @@ namespace Bank_gruppprojekt
                     {
                         currentCustomer.Accounts[accountIndex - 1].Balance -= withdrawal;
                         Console.WriteLine($"Thank you for the withdrawal. Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
-
                         currentCustomer.LogWithdraw(withdrawal, currentCustomer.Accounts[accountIndex - 1].Currency);
                     }
                 }
@@ -311,7 +314,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-        private static void TransferBetweenOwnAccounts(Customer currentCustomer)
+        public static void TransferBetweenOwnAccounts(Customer currentCustomer)
         {
             Console.WriteLine("Which account do you want to transfer money from?");
             currentCustomer.DisplayAccounts(currentCustomer);
@@ -322,28 +325,40 @@ namespace Bank_gruppprojekt
 
                 if (double.TryParse(Console.ReadLine(), out double transferAmount))
                 {
-                    if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
-                    {
-                        Console.WriteLine("Insufficient funds for the selected account.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Which account do you want to transfer money to?");
-                        currentCustomer.DisplayAccounts(currentCustomer);
+                    Console.WriteLine("To which account do you want to transfer money?");
+                    currentCustomer.DisplayAccounts(currentCustomer);
 
-                        if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
+                    if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
+                    {
+
+                        double sourceToTargetRate = Administrator.GetExchangeRate(currentCustomer.Accounts[fromAccountIndex - 1].Currency, currentCustomer.Accounts[toAccountIndex - 1].Currency);
+                        double targetToSourceRate = Administrator.GetExchangeRate(currentCustomer.Accounts[toAccountIndex - 1].Currency, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
+
+                        if (sourceToTargetRate == 1.0 || targetToSourceRate == 1.0)
                         {
-                            currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
-                            currentCustomer.Accounts[toAccountIndex - 1].Balance += transferAmount;
-
-                            Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                            Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
-
+                            Console.WriteLine("Invalid currency exchange rates. Unable to complete the transfer.");
                         }
                         else
                         {
-                            Console.WriteLine("Invalid account selection for receiving money.");
+                            double convertedAmount = transferAmount * sourceToTargetRate;
+
+                            if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
+                            {
+                                Console.WriteLine("Insufficient funds for the selected account.");
+                            }
+                            else
+                            {
+                                currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                                currentCustomer.Accounts[toAccountIndex - 1].Balance += convertedAmount;
+
+                                Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                                Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+                            }
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid account selection for receiving money.");
                     }
                 }
                 else
@@ -358,8 +373,12 @@ namespace Bank_gruppprojekt
         }
 
 
+
+
         private static void TransferToAnotherUser(Customer currentCustomer)
         {
+
+            double exchangeRate = Administrator.GetExchangeRate("USD", "SEK");
             Console.WriteLine("Which user do you want to transfer money to?");
             DisplayCustomer(Customers, currentCustomer);
 
@@ -413,112 +432,112 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid user selection for transferring money.");
             }
+
         }
-
-        public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
-        {
-            var otherCustomer = customers.Where(customer => customer.Username != currentCustomer.Username).ToList();
-            foreach (var customer in otherCustomer)
+            public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
             {
-                var index = customers.IndexOf(customer);
-                Console.WriteLine($"{index + 1}. {customers[index].Username}");
-            }
-        }
-
-        public static void Loan(Customer currentCustomer)
-        {
-            Console.WriteLine("Select the account you want to loan money to:");
-            currentCustomer.DisplayAccounts(currentCustomer);
-
-            if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
-            {
-                int accountIndex = selectedAccountIndex - 1;
-
-                Console.WriteLine("Enter the amount you want to borrow:");
-
-                if (double.TryParse(Console.ReadLine(), out double loanAmount))
+                var otherCustomer = customers.Where(customer => customer.Username != currentCustomer.Username).ToList();
+                foreach (var customer in otherCustomer)
                 {
-                    double maxLoanAmount = currentCustomer.GetMaxLoanAmount();
+                    var index = customers.IndexOf(customer);
+                    Console.WriteLine($"{index + 1}. {customers[index].Username}");
+                }
+            }
 
-                    if (loanAmount <= maxLoanAmount)
+            public static void Loan(Customer currentCustomer)
+            {
+                Console.WriteLine("Select the account you want to loan money to:");
+                currentCustomer.DisplayAccounts(currentCustomer);
+
+                if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
+                {
+                    int accountIndex = selectedAccountIndex - 1;
+
+                    Console.WriteLine("Enter the amount you want to borrow:");
+
+                    if (double.TryParse(Console.ReadLine(), out double loanAmount))
                     {
-                        currentCustomer.DepositLoan(loanAmount, accountIndex);
-                        Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
+                        double maxLoanAmount = currentCustomer.GetMaxLoanAmount();
+
+                        if (loanAmount <= maxLoanAmount)
+                        {
+                            currentCustomer.DepositLoan(loanAmount, accountIndex);
+                            Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Loan amount exceeds the maximum limit. Maximum allowed loan is {maxLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}.");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine($"Loan amount exceeds the maximum limit. Maximum allowed loan is {maxLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}.");
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                    Console.WriteLine("Invalid account selection.");
                 }
             }
-            else
+
+            private double GetMaxLoanAmount()
             {
-                Console.WriteLine("Invalid account selection.");
+                const double loanLimitMultiplier = 5.0;
+                double totalBalance = Accounts.Sum(account => account.Balance);
+                return totalBalance * loanLimitMultiplier;
             }
-        }
 
-        private double GetMaxLoanAmount()
-        {
-            const double loanLimitMultiplier = 5.0;
-            double totalBalance = Accounts.Sum(account => account.Balance);
-            return totalBalance * loanLimitMultiplier;
-        }
-
-        private void DepositLoan(double loanAmount, int accountIndex)
-        {
-            Accounts[accountIndex].Balance += loanAmount;
-        }
-
-
-        public void LogDeposit(double amount, string currency)
-        {
-            string logBoi = $"Deposit: {amount}{currency}";
-            logActivity.Add(logBoi);
-            Console.WriteLine(logBoi);
-        }
-
-        public void LogWithdraw(double amount, string currency)
-        {
-            string logBoi = $"Withdrawl: {amount}{currency}";
-            logActivity.Add(logBoi);
-            Console.WriteLine(logBoi);
-        }
-
-        public static void PrintLog(Customer currentCustomer)
-        { currentCustomer.GetLog();
-            foreach (var logboi in currentCustomer.logActivity)
+            private void DepositLoan(double loanAmount, int accountIndex)
             {
-                Console.WriteLine(logboi);
+                Accounts[accountIndex].Balance += loanAmount;
             }
-        }
 
-        public List<string> GetLog()
-        {
-            return logActivity;
-        }
 
-        public static void PrintOptions()
-        {
-            Console.WriteLine("Choose from the menu");
-            Console.WriteLine("1. Deposit");
-            Console.WriteLine("2. Withdrawal");
-            Console.WriteLine("3. Show balance");
-            Console.WriteLine("4. Add new account");
-            Console.WriteLine("5. Transfer money");
-            Console.WriteLine("6. Check history of withdrawls and deposits");
-            Console.WriteLine("7. Loan para");
-            Console.WriteLine("8. Exit");
-        }
+            public void LogDeposit(double amount, string currency)
+            {
+                string logBoi = $"Deposit: {amount}{currency}";
+                logActivity.Add(logBoi);
+                Console.WriteLine(logBoi);
+            }
 
-        public static string GetPin()
-        {
-            Console.WriteLine("Enter PIN");
-            return Console.ReadLine();
-        }
+            public void LogWithdraw(double amount, string currency)
+            {
+                string logBoi = $"Withdrawl: {amount}{currency}";
+                logActivity.Add(logBoi);
+                Console.WriteLine(logBoi);
+            }
+
+            public static void PrintLog(Customer currentCustomer)
+            { currentCustomer.GetLog();
+                foreach (var logboi in currentCustomer.logActivity)
+                {
+                    Console.WriteLine(logboi);
+                }
+            }
+
+            public List<string> GetLog()
+            {
+                return logActivity;
+            }
+
+            public static void PrintOptions()
+            {
+                Console.WriteLine("Choose from the menu");
+                Console.WriteLine("1. Deposit");
+                Console.WriteLine("2. Withdrawal");
+                Console.WriteLine("3. Show balance");
+                Console.WriteLine("4. Add new account");
+                Console.WriteLine("5. Transfer money");
+                Console.WriteLine("6. Check history of withdrawls and deposits");
+                Console.WriteLine("7. Loan para");
+                Console.WriteLine("8. Exit");
+            }
+
+            public static string GetPin()
+            {
+                Console.WriteLine("Enter PIN");
+                return Console.ReadLine();
+            }
     }
 }
 

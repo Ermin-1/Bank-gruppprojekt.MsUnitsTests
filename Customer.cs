@@ -18,6 +18,7 @@ namespace Bank_gruppprojekt
         private static List<Customer> Customers;
 
         private List<string> logActivity = new List<string>();
+
         static Customer()
         {
 
@@ -138,7 +139,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Which account balance do you want to check?");
             currentCustomer.DisplayAccounts(currentCustomer);
 
-            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex < currentCustomer.Accounts.Count)
+            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex <= currentCustomer.Accounts.Count)
             {
                 Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance} {currentCustomer.Accounts[accountIndex - 1].Currency}");
             }
@@ -164,7 +165,6 @@ namespace Bank_gruppprojekt
 
             if (!int.TryParse(pin, out int pinValue))
             {
-                Console.WriteLine($"Invalid PIN format for customer: {username}");
                 return null;
             }
 
@@ -500,7 +500,6 @@ namespace Bank_gruppprojekt
             return Console.ReadLine();
         }
     }
-
 }
 
         

@@ -8,8 +8,8 @@ namespace BankApplication
     public class Program
     {
         static void Main(string[] args)
-        {            
-            User.LoginIn();
+        {
+            User.LoginIn();           
         }        
     }
 }

@@ -26,7 +26,7 @@ namespace Bank_gruppprojekt
 
             };
         }
-        public void AdminCreateUser(Administrator adminUser)
+        public void AdminCreateUser(Administrator adminUser) 
         {
             if (adminUser == null || !Administrators.Contains(adminUser))
             {

@@ -19,7 +19,10 @@ namespace Bank_gruppprojekt
 
         private List<string> logActivity = new List<string>();
 
-        
+        private Queue<Account> transactionQue = new Queue<Account>();
+            
+
+
 
         static Customer()
         {
@@ -56,6 +59,21 @@ namespace Bank_gruppprojekt
             Username = userName;
             Pin = pin;
             Accounts = new List<Account>();
+        }
+        public void AddTransaction(Account transaction)
+        {
+            transactionQue.Enqueue(transaction);
+            Console.WriteLine($"A transaction has been added to the queue");
+        }
+
+        public void MakeTransaction(Account transaction, Customer currentCustomer)
+        {
+            while (transactionQue.Count > 0)
+            {
+                transaction = transactionQue.Dequeue();
+
+                Console.WriteLine($"Transaction made for customer {currentCustomer.Username}");
+            }
         }
 
         public static void AddUser(Customer customer)

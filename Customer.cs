@@ -61,7 +61,7 @@ namespace Bank_gruppprojekt
             Username = userName;
             Pin = pin;
             Accounts = new List<Account>();
-            timer = new Timer(null, MakeTransaction, TimeSpan.Zero, TimeSpan.FromMinutes(15));
+            //timer = new Timer(null, MakeTransaction, TimeSpan.Zero, TimeSpan.FromMinutes(15));
         }
 
         public void AddTransaction(Account transaction)
@@ -444,15 +444,17 @@ namespace Bank_gruppprojekt
                 }
             }
 
-            public static void Loan(Customer currentCustomer)
+        public static void Loan(Customer currentCustomer)
+        {
+            Console.WriteLine("Select the account you want to loan money to:");
+            currentCustomer.DisplayAccounts(currentCustomer);
+
+            if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
             {
-                Console.WriteLine("Select the account you want to loan money to:");
-                currentCustomer.DisplayAccounts(currentCustomer);
+                int accountIndex = selectedAccountIndex - 1;
 
-                if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
+                if (currentCustomer.Accounts[accountIndex].Currency.ToUpper() != "USD")
                 {
-                    int accountIndex = selectedAccountIndex - 1;
-
                     Console.WriteLine("Enter the amount you want to borrow:");
 
                     if (double.TryParse(Console.ReadLine(), out double loanAmount))
@@ -461,8 +463,23 @@ namespace Bank_gruppprojekt
 
                         if (loanAmount <= maxLoanAmount)
                         {
-                            currentCustomer.DepositLoan(loanAmount, accountIndex);
-                            Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
+                            Console.WriteLine("Enter the number of months for the loan:");
+
+                            if (int.TryParse(Console.ReadLine(), out int loanMonths) && loanMonths > 0)
+                            {
+                                double interestRate = 0.04; // Fast ränta på 4%
+
+                                double totalInterest = loanAmount * interestRate * loanMonths;
+
+                                currentCustomer.DepositLoan(loanAmount, accountIndex);
+
+                                Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
+                                Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input for the number of months. Please enter a valid positive integer.");
+                            }
                         }
                         else
                         {
@@ -471,16 +488,22 @@ namespace Bank_gruppprojekt
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                        Console.WriteLine("Invalid input for loan amount. Please enter a valid number.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid account selection.");
+                    Console.WriteLine("Loans cannot be made from accounts with USD currency.");
                 }
             }
+            else
+            {
+                Console.WriteLine("Invalid account selection.");
+            }
+        }
 
-            private double GetMaxLoanAmount()
+
+        private double GetMaxLoanAmount()
             {
                 const double loanLimitMultiplier = 5.0;
                 double totalBalance = Accounts.Sum(account => account.Balance);

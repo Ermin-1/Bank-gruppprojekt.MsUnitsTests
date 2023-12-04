@@ -19,6 +19,8 @@ namespace Bank_gruppprojekt
 
         private List<string> logActivity = new List<string>();
 
+        
+
         static Customer()
         {
 
@@ -97,7 +99,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Accounts:");
             for (int i = 0; i < customer.Accounts.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {customer.Accounts[i].Accounttype}");
+                Console.WriteLine($"{i + 1}. [{customer.Accounts[i].Accounttype}] {customer.Accounts[i].Balance} {customer.Accounts[i].Currency}");
             }
         }
 

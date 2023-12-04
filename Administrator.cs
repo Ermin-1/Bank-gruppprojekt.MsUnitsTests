@@ -10,21 +10,52 @@ namespace Bank_gruppprojekt
     public class Administrator : User, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
+
+        private static double usdToSekRate = 10;
+        private static double sekToUsdRate = 1 / usdToSekRate;
+
         public Administrator(string userName, string pin) : base(userName, pin)
         {
 
         }
 
         private static List<Administrator> Administrators;
+
         static Administrator()
         {
-
             Administrators = new List<Administrator>
-            {
-            new Administrator("Karen", "0000"),
-            new Administrator("Admin", "7777")
+      {
 
-            };
+          new Administrator("Karen", "0000"),
+          new Administrator("Admin", "7777")
+      };
+        }
+
+        public static double GetExchangeRate(string sourceCurrency, string targetCurrency)
+        {
+            if (sourceCurrency == "USD" && targetCurrency == "SEK")
+            {
+                return usdToSekRate;
+            }
+
+            if (sourceCurrency == "SEK" && targetCurrency == "USD")
+            {
+                return 1 / usdToSekRate;
+            }
+            return 1.0;
+        }
+
+        public void SetExchangeRate(string sourceCurrency, string targetCurrency, double newRate)
+        {
+            if (sourceCurrency == "USD" && targetCurrency == "SEK")
+            {
+                usdToSekRate = newRate;
+            }
+
+            if (sourceCurrency == "SEK" && targetCurrency == "USD")
+            {
+                sekToUsdRate = 1 / newRate;
+            }
         }
         public void AdminCreateUser(Administrator adminUser) 
         {

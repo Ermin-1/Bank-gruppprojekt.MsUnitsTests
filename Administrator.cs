@@ -10,7 +10,7 @@ namespace Bank_gruppprojekt
     public class Administrator : User, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
-        private static double usdToSekRate = 10;
+        public static double usdToSekRate = 10;
         private static double sekToUsdRate = 1 / usdToSekRate;
 
         public static double SavingsInterestRate { get; private set; } = 0.2;

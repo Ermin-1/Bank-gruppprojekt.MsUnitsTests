@@ -24,6 +24,10 @@ namespace Bank_gruppprojekt
 
         private Timer timer;
 
+        private bool hasTakenLoan = false;
+
+        private double totalBorrowedAmount = 0;
+
 
 
         static Customer()
@@ -474,35 +478,46 @@ namespace Bank_gruppprojekt
 
                 if (currentCustomer.Accounts[accountIndex].Currency.ToUpper() != "USD")
                 {
-                    Console.WriteLine("Enter the amount you want to borrow:");
+                    double remainingLoanAmount = currentCustomer.GetMaxLoanAmount(accountIndex) - currentCustomer.totalBorrowedAmount;
 
-                    if (double.TryParse(Console.ReadLine(), out double loanAmount))
+                    if (remainingLoanAmount <= 0)
                     {
-                        double maxLoanAmount = currentCustomer.GetMaxLoanAmount();
+                        Console.WriteLine("You have reached the maximum loan limit. Unable to process another loan.");
+                        return;
+                    }
 
-                        if (loanAmount <= maxLoanAmount)
+                    Console.WriteLine($"Enter the amount you want to borrow (up to {remainingLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}):");
+
+                    if (double.TryParse(Console.ReadLine(), out double loanAmount) && loanAmount > 0)
+                    {
+                        if (loanAmount <= remainingLoanAmount)
                         {
                             Console.WriteLine("Enter the number of months for the loan:");
-
                             if (int.TryParse(Console.ReadLine(), out int loanMonths) && loanMonths > 0)
                             {
                                 double interestRate = 0.04; // Fast ränta på 4%
 
                                 double totalInterest = loanAmount * interestRate * loanMonths;
 
-                                currentCustomer.DepositLoan(loanAmount, accountIndex);
+                                if (currentCustomer.Accounts[accountIndex].Currency.ToUpper() == "USD")
+                                {
+                                    loanAmount *= Administrator.usdToSekRate;
+                                    totalInterest *= Administrator.usdToSekRate;
+                                }
 
+                                currentCustomer.DepositLoan(loanAmount, accountIndex);
+                                currentCustomer.totalBorrowedAmount += loanAmount;
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
                             }
                             else
                             {
-                                Console.WriteLine("Invalid input for the number of months. Please enter a valid positive integer.");
+                                Console.WriteLine("Invalid input for the number of months. Please enter a valid number.");
                             }
                         }
                         else
                         {
-                            Console.WriteLine($"Loan amount exceeds the maximum limit. Maximum allowed loan is {maxLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}.");
+                            Console.WriteLine($"Loan amount exceeds the remaining limit. Remaining allowed loan is {remainingLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}.");
                         }
                     }
                     else
@@ -522,14 +537,20 @@ namespace Bank_gruppprojekt
         }
 
 
-        private double GetMaxLoanAmount()
+        public double GetMaxLoanAmount(int accountIndex)
+        {
+            const double loanLimitMultiplier = 5.0;
+            double totalBalance = Accounts.Sum(account => account.Currency.ToUpper() == "USD" ? account.Balance * Administrator.usdToSekRate : account.Balance);
+
+            if (Accounts[accountIndex].Currency.ToUpper() == "USD")
             {
-                const double loanLimitMultiplier = 5.0;
-                double totalBalance = Accounts.Sum(account => account.Balance);
-                return totalBalance * loanLimitMultiplier;
+                totalBalance *= Administrator.usdToSekRate;
             }
 
-            private void DepositLoan(double loanAmount, int accountIndex)
+            return totalBalance * loanLimitMultiplier;
+        }
+
+        private void DepositLoan(double loanAmount, int accountIndex)
             {
                 Accounts[accountIndex].Balance += loanAmount;
             }

@@ -26,6 +26,8 @@ namespace Bank_gruppprojekt
         public static User LoginIn()
         {
             Console.Clear();
+            AviciiBank art = new AviciiBank();
+            art.PaintBank();
             Console.WriteLine("Welcome to the bank");
             int loginAttempts = 0;
             User authenticatedUser = null;

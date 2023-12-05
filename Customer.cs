@@ -426,12 +426,15 @@ namespace Bank_gruppprojekt
                                 Console.WriteLine("Transaction successful. Waiting 15 minute for the transaction to go through...");
                                 Console.WriteLine("This will be done automatically, you can go back to the menu.");
 
-                                await Task.Delay(15 * 60 * 1000); // 15 min
+                                
                                 currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
+                                    $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                                await Task.Delay(15 * 60 * 1000); // 15 min
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
 
-                                //Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                               
                                 //Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
 
                                 //currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);

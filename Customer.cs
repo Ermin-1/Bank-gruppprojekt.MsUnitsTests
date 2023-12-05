@@ -110,20 +110,26 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("Invalid account selection.");
             }
         }
-
         public void CreateAccount(string accountType, double initialBalance, string currency)
         {
-            Accounts.Add(new Account(accountType, initialBalance, currency));
+            
+            Account newAccount = new Account(accountType, initialBalance, currency);
+            Accounts.Add(newAccount);
+
+          
+            LogDeposit(initialBalance, currency);
         }
+
 
         public void DisplayAccounts(Customer customer)
         {
             Console.WriteLine("Accounts:");
             for (int i = 0; i < customer.Accounts.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. [{customer.Accounts[i].Accounttype}] {customer.Accounts[i].Balance} {customer.Accounts[i].Currency}");
+                Console.WriteLine($"{i + 1}. {customer.Accounts[i].Accounttype}");
             }
         }
+
 
         public static void Withdraw(Customer currentCustomer)
         {
@@ -273,8 +279,12 @@ namespace Bank_gruppprojekt
 
         public static void AddNewAccount(Customer currentCustomer)
         {
+
+
             Console.WriteLine("Enter the type of the new account:");
             string accountType = Console.ReadLine();
+
+            Administrator.DisplayInterest(accountType);
 
             Console.WriteLine("Enter the initial balance:");
             if (double.TryParse(Console.ReadLine(), out double initialBalance))
@@ -284,6 +294,7 @@ namespace Bank_gruppprojekt
 
                 currentCustomer.CreateAccount(accountType, initialBalance, currency);
                 Console.WriteLine($"New {accountType} account added with an initial balance of {initialBalance} {currency}");
+            
             }
             else
             {
@@ -307,6 +318,7 @@ namespace Bank_gruppprojekt
                 {
                     TransferToAnotherUser(currentCustomer);
                 }
+
             }
             else
             {
@@ -353,6 +365,10 @@ namespace Bank_gruppprojekt
 
                                 Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
                                 Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+                                
+                                
+                                currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
+                                currentCustomer.LogDeposit(convertedAmount, currentCustomer.Accounts[toAccountIndex - 1].Currency);
                             }
                         }
                     }
@@ -411,6 +427,9 @@ namespace Bank_gruppprojekt
 
                                 Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
                                 Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
+
+                                currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
+                                receiver.LogDeposit(transferAmount, receiver.Accounts[toAccountIndex - 1].Currency);
                             }
                             else
                             {
@@ -549,10 +568,10 @@ namespace Bank_gruppprojekt
                 Console.WriteLine("1. Deposit");
                 Console.WriteLine("2. Withdrawal");
                 Console.WriteLine("3. Show balance");
-                Console.WriteLine("4. Add new account");
+                Console.WriteLine("4. Open a new account");
                 Console.WriteLine("5. Transfer money");
                 Console.WriteLine("6. Check history of withdrawls and deposits");
-                Console.WriteLine("7. Loan para");
+                Console.WriteLine("7. Take a loan");
                 Console.WriteLine("8. Exit");
             }
 

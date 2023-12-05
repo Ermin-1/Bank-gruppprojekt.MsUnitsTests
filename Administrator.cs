@@ -10,26 +10,33 @@ namespace Bank_gruppprojekt
     public class Administrator : User, ILogInServices
     {
         public const int MaxLoginAttempts = 3;
-
         private static double usdToSekRate = 10;
         private static double sekToUsdRate = 1 / usdToSekRate;
 
+        public static double SavingsInterestRate { get; private set; } = 0.2;
         public Administrator(string userName, string pin) : base(userName, pin)
         {
 
         }
 
         private static List<Administrator> Administrators;
-
         static Administrator()
         {
-            Administrators = new List<Administrator>
-      {
 
-          new Administrator("Karen", "0000"),
-          new Administrator("Admin", "7777")
-      };
+            Administrators = new List<Administrator>
+            {
+            new Administrator("Karen", "0000"),
+            new Administrator("Admin", "7777")
+
+            };
         }
+
+        public static void DisplayInterest(string accountType)
+        {
+
+            Console.WriteLine($"By opening a new {accountType} account, you will receive an interest of {SavingsInterestRate}.");
+        }
+
 
         public static double GetExchangeRate(string sourceCurrency, string targetCurrency)
         {

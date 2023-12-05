@@ -392,10 +392,7 @@ namespace Bank_gruppprojekt
             }
         }
 
-
-
-
-        private static void TransferToAnotherUser(Customer currentCustomer)
+        private static async Task TransferToAnotherUser(Customer currentCustomer)
         {
 
             double exchangeRate = Administrator.GetExchangeRate("USD", "SEK");
@@ -426,14 +423,19 @@ namespace Bank_gruppprojekt
 
                             if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {
+                                Console.WriteLine("Transaction successful. Waiting 15 minute for the transaction to go through...");
+                                Console.WriteLine("This will be done automatically, you can go back to the menu.");
+
+                                await Task.Delay(15 * 60 * 1000); // 15 min
                                 currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
 
-                                currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
-                                receiver.LogDeposit(transferAmount, receiver.Accounts[toAccountIndex - 1].Currency);
+                                //Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                                //Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
+
+                                //currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
+                                //receiver.LogDeposit(transferAmount, receiver.Accounts[toAccountIndex - 1].Currency);
                             }
                             else
                             {
@@ -457,7 +459,7 @@ namespace Bank_gruppprojekt
             }
 
         }
-            public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
+        public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
             {
                 var otherCustomer = customers.Where(customer => customer.Username != currentCustomer.Username).ToList();
                 foreach (var customer in otherCustomer)

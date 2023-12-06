@@ -178,11 +178,11 @@ namespace Bank_gruppprojekt
 
             if (authenticatedCustomer != null)
             {
-                Console.WriteLine($"Authentication successful for customer: {username}");
+                Console.WriteLine($"\u001b[32mAuthentication successful for customer: {username}\u001b[0m");
             }
             else
             {
-                Console.WriteLine($"Authentication failed for customer: {username}");
+                //Console.WriteLine($"\u001b[31mAuthentication failed for customer: {username}\u001b[0m");
             }
 
             return authenticatedCustomer;
@@ -226,7 +226,7 @@ namespace Bank_gruppprojekt
                                 Loan(currentCustomer);
                                 break;
                             case 8:
-                                Console.WriteLine("Exiting...");
+                                Console.WriteLine("\u001b[31mExiting...\u001b[0m");
                                 Console.WriteLine("");
                                 Console.WriteLine("Press enter to exit to Login");
                                 Console.ReadLine();

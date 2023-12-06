@@ -51,7 +51,7 @@ namespace Bank_gruppprojekt
 
                     if (authenticatedUser != null)
                     {
-                        Console.WriteLine($"Authenticated as: {authenticatedUser.GetType().Name}");
+                        //Console.WriteLine($"\u001b[32mAuthenticated as: {authenticatedUser.GetType().Name}\u001b[0m");
                         Thread.Sleep(3000);
                         Console.Clear();
                         if (authenticatedUser is Customer)
@@ -65,14 +65,14 @@ namespace Bank_gruppprojekt
                     }
                     else
                     {
-                        Console.WriteLine($"Authentication failed for user '{username}'. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                        Console.WriteLine($"\u001b[31mAuthentication failed for user '{username}'. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
                         loginAttempts++;
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
-                    Console.WriteLine($"Authentication failed. Attempts left: {MaxLoginAttempts - loginAttempts - 1}");
+                    Console.WriteLine($"\u001b[31mAuthentication failed. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
                     loginAttempts++;
                 }
                 if (loginAttempts == MaxLoginAttempts)

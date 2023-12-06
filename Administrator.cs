@@ -141,7 +141,7 @@ namespace Bank_gruppprojekt
                                 currentAdmin.AdminCreateUser(currentAdmin);
                                 break;
                             case 2:
-                                Console.WriteLine("Exiting...");
+                                Console.WriteLine("\u001b[31mExiting...\u001b[0m");
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
@@ -189,11 +189,11 @@ namespace Bank_gruppprojekt
 
                 if (authenticatedAdministrator != null)
                 {
-                    Console.WriteLine($"Authentication successful for administrator: {username}");
+                    Console.WriteLine($"\u001b[32mAuthentication successful for administrator: {username}\u001b[0m");
                 }
                 else
                 {
-                    Console.WriteLine($"Authentication failed for administrator: {username}");
+                    //Console.WriteLine($"\u001b[31mAuthentication failed for administrator: {username}\u001b[0m");
                 }
 
                 return authenticatedAdministrator;

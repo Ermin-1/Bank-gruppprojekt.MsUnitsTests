@@ -24,11 +24,8 @@ namespace Bank_gruppprojekt
         } 
         
         public static User LoginIn()
-        {
-            Console.Clear();
-            AviciiBank art = new AviciiBank();
-            art.PaintBank();
-            Console.WriteLine("Welcome to the bank");
+        {           
+            Console.WriteLine("\t \tWelcome to the bank");
             int loginAttempts = 0;
             User authenticatedUser = null;
 
@@ -36,9 +33,12 @@ namespace Bank_gruppprojekt
             {
                 try
                 {
-                    Console.WriteLine("Enter username: ");
+                    
+                    AviciiBank art = new AviciiBank();
+                    art.PaintBank();
+                    Console.Write("\t \tEnter username: ");
                     string username = Console.ReadLine();
-                    Console.WriteLine("Enter PIN: ");
+                    Console.Write("\t \tEnter PIN: ");
                     string pin = Console.ReadLine();
 
                     authenticatedUser = Customer.AuthenticateCustomer(username, pin);
@@ -75,7 +75,11 @@ namespace Bank_gruppprojekt
                 }
                 if (loginAttempts == MaxLoginAttempts)
                 {
+                    AviciiBank art = new AviciiBank();
+                    art.FadeBank();
+
                     Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");
+                    
                     Thread.Sleep(2000);
                     break;
                 }

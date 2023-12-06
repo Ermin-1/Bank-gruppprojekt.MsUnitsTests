@@ -166,11 +166,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Choose from the menu");
             Console.WriteLine("1. Create User");
             Console.WriteLine("2. Exit");
-        }
-        //public static Administrator AuthenticateAdministrator(string username, string pin)
-        //{
-        //    return Administrators.FirstOrDefault(u => u.Username == username && u.Pin == pin);
-        //}
+        }     
 
         public static Administrator AuthenticateAdministrator(string username, string pin)
         {

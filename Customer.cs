@@ -18,15 +18,11 @@ namespace Bank_gruppprojekt
 
         private static List<Customer> Customers;
 
-        private List<string> logActivity = new List<string>();
-
-        private static Queue<Account> transactionQue = new Queue<Account>();
-
-        private Timer timer;
-
-        private bool hasTakenLoan = false;
+        private List<string> logActivity = new List<string>();        
 
         private double totalBorrowedAmount = 0;
+
+        public DateTime LastLoanTime { get; set; } = DateTime.MinValue;
 
 
 
@@ -64,25 +60,8 @@ namespace Bank_gruppprojekt
         {
             Username = userName;
             Pin = pin;
-            Accounts = new List<Account>();
-            //timer = new Timer(null, MakeTransaction, TimeSpan.Zero, TimeSpan.FromMinutes(15));
-        }
-
-        public void AddTransaction(Account transaction)
-        {
-            transactionQue.Enqueue(transaction);
-            Console.WriteLine($"A transaction has been added to the queue");
-        }
-
-        public void MakeTransaction(Account transaction, Customer currentCustomer)
-        {
-            while (transactionQue.Count > 0)
-            {
-                transaction = transactionQue.Dequeue();
-
-                Console.WriteLine($"Transaction made for customer {currentCustomer.Username}");
-            }
-        }
+            Accounts = new List<Account>();            
+        }      
 
         public static void AddUser(Customer customer)
         {
@@ -185,12 +164,7 @@ namespace Bank_gruppprojekt
         public static List<Customer> GetCustomerWithAccounts()
         {
             return Customers;
-        }
-
-        //public static Customer AuthenticateCustomer(string username, string pin)
-        //{
-        //    return Customers.FirstOrDefault(u => u.Username == username && u.Pin == pin);
-        //}
+        }      
 
         public static Customer AuthenticateCustomer(string username, string pin)
         {
@@ -474,6 +448,12 @@ namespace Bank_gruppprojekt
 
         public static void Loan(Customer currentCustomer)
         {
+            if ((DateTime.Now - currentCustomer.LastLoanTime).TotalDays < 30)
+            {
+                Console.WriteLine("You can only apply for a loan once every 30 days. If you need further help contact the bank.");
+                return;
+            }
+
             Console.WriteLine("Select the account you want to loan money to:");
             currentCustomer.DisplayAccounts(currentCustomer);
 
@@ -514,6 +494,9 @@ namespace Bank_gruppprojekt
                                 currentCustomer.totalBorrowedAmount += loanAmount;
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
+
+                                currentCustomer.LastLoanTime = DateTime.Now;
+
                             }
                             else
                             {
@@ -588,20 +571,23 @@ namespace Bank_gruppprojekt
                 return logActivity;
             }
 
-            public static void PrintOptions()
-            {
-                Console.WriteLine("Choose from the menu");
-                Console.WriteLine("1. Deposit");
-                Console.WriteLine("2. Withdrawal");
-                Console.WriteLine("3. Show balance");
-                Console.WriteLine("4. Open a new account");
-                Console.WriteLine("5. Transfer money");
-                Console.WriteLine("6. Check history of withdrawls and deposits");
-                Console.WriteLine("7. Take a loan");
-                Console.WriteLine("8. Exit");
-            }
+        public static void PrintOptions()
+        {
+            Console.WriteLine("╔══════════════════════════════════╗");
+            Console.WriteLine("║       Choose from the menu       ║");
+            Console.WriteLine("╠══════════════════════════════════╣");
+            Console.WriteLine("║ 1. Deposit                       ║");
+            Console.WriteLine("║ 2. Withdrawal                    ║");
+            Console.WriteLine("║ 3. Show balance                  ║");
+            Console.WriteLine("║ 4. Open a new account            ║");
+            Console.WriteLine("║ 5. Transfer money                ║");
+            Console.WriteLine("║ 6. Check history of transactions ║");
+            Console.WriteLine("║ 7. Take a loan                   ║");
+            Console.WriteLine("║ 8. Exit                          ║");
+            Console.WriteLine("╚══════════════════════════════════╝");
+        }
 
-            public static string GetPin()
+        public static string GetPin()
             {
                 Console.WriteLine("Enter PIN");
                 return Console.ReadLine();

@@ -53,6 +53,7 @@ namespace Bank_gruppprojekt
                     {
                         Console.WriteLine($"Authenticated as: {authenticatedUser.GetType().Name}");
                         Thread.Sleep(3000);
+                        Console.Clear();
                         if (authenticatedUser is Customer)
                         {
                             Customer.Menu((Customer)authenticatedUser);

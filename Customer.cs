@@ -191,7 +191,7 @@ namespace Bank_gruppprojekt
         public static void Menu(Customer currentCustomer)
         {
 
-            Console.Clear();            
+              
             int option = 0;
 
             do
@@ -455,7 +455,7 @@ namespace Bank_gruppprojekt
         {
             if ((DateTime.Now - currentCustomer.LastLoanTime).TotalDays < 30)
             {
-                Console.WriteLine("You can only apply for a loan once every 30 days. If you need further help contact the bank.");
+                Console.WriteLine("You can only apply for one loan once every 30 days. If you need further help contact the bank.");
                 return;
             }
 
@@ -499,7 +499,8 @@ namespace Bank_gruppprojekt
                                 currentCustomer.totalBorrowedAmount += loanAmount;
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
-
+                                Thread.Sleep(3000);
+                                Console.Clear();
                                 currentCustomer.LastLoanTime = DateTime.Now;
 
                             }

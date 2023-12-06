@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Bank_gruppprojekt
 {
     internal class AviciiBank
@@ -12,79 +13,39 @@ namespace Bank_gruppprojekt
         {
 
         }
+
         public void PaintBank()
-        {                      
-           string[] asciiArt = {
-            "         _._._                       _._._",
-            "        _|   |_                     _|   |_",
-            "        | ... |_._._._._._._._._._._| ... |",
-            "        | ||| |  o THE MEGA BANK o  | ||| |",
-            "        | \"\"\" |  \"\"\"    \"\"\"    \"\"\"  | \"\"\" |",
-            "   ())  |[-|-]| [-|-]  [-|-]  [-|-] |[-|-]|  ())",
-            "  (())) |     |---------------------|     | (()))",
-            " (())())| \"\"\" |  \"\"\"    \"\"\"    \"\"\"  | \"\"\" |(())())",
-            " (()))()|[-|-]|  :::   .-\"-.   :::  |[-|-]|(()))()",
-            " ()))(()|     | |~|~|  |_|_|  |~|~| |     |()))(()",
-            "    ||  |_____|_|_|_|__|_|_|__|_|_|_|_____|  ||",
-            " ~ ~^^ @@@@@@@@@@@@@@/=======\\@@@@@@@@@@@@@@ ^^~ ~",
-            "      ^~^~                                ~^~^"
-        };
-
-        foreach (string line in asciiArt)
-        {
-            Console.WriteLine(line);
-            Thread.Sleep(75); 
-        }
-
-        }
-
-        public void FlyBank() 
         {
             string[] asciiArt = {
             "         _._._                       _._._",
             "        _|   |_                     _|   |_",
             "        | ... |_._._._._._._._._._._| ... |",
-            "        | ||| |  o THE MEGA BANK o  | ||| |",
+            "        | ||| |  o THE MEGA BANK o  | ||| |", // Not colored
             "        | \"\"\" |  \"\"\"    \"\"\"    \"\"\"  | \"\"\" |",
             "   ())  |[-|-]| [-|-]  [-|-]  [-|-] |[-|-]|  ())",
             "  (())) |     |---------------------|     | (()))",
             " (())())| \"\"\" |  \"\"\"    \"\"\"    \"\"\"  | \"\"\" |(())())",
-            " (()))()|[-|-]|  :::   .-\"-.   :::  |[-|-]|(()))()",
-            " ()))(()|     | |~|~|  |_|_|  |~|~| |     |()))(()",
+            " (()))()|[-|-]|  :::   .-\"-.   :::  |[-|-]|(()))()", // Green color for the trees
+            " ()))(()|     | |-|-|  |_|_|  |-|-| |     |()))(()", // Green color for the grass
             "    ||  |_____|_|_|_|__|_|_|__|_|_|_|_____|  ||",
             " ~ ~^^ @@@@@@@@@@@@@@/=======\\@@@@@@@@@@@@@@ ^^~ ~",
             "      ^~^~                                ~^~^"
         };
-
-            int bankStartIndex = 3; // Index of the line with the bank
-
-            for (int i = 0; i < 50; i++) // Adjust the number of iterations based on the desired animation duration
-            {
+            
+                
                 foreach (string line in asciiArt)
-                {
-                    // Simulate bank flying away by adjusting its position
-                    if (bankStartIndex >= 0)
-                    {
-                        Console.WriteLine(line.Substring(bankStartIndex));
-                    }
-                    else
-                    {
-                        Console.WriteLine(line);
-                    }
-                }
-
-                // Simulate bank flying away by adjusting the starting index
-                bankStartIndex++;
-
-                // Delay for a short duration between frames
-                Thread.Sleep(100);
-
-                // Clear the console to create the illusion of movement
-                Console.Clear();
-            }
-
+                {                                        
+                    string coloredLine = line.Replace(")", "\u001b[32m)\u001b[0m")
+                        .Replace("@", "\u001b[32m@\u001b[0m")
+                        .Replace("~", "\u001b[32m~\u001b[0m")
+                        .Replace("^", "\u001b[32m^\u001b[0m")
+                        .Replace("(", "\u001b[32m(\u001b[0m")
+                        .Replace("THE MEGA BANK", "\u001b[36mTHE MEGA BANK\u001b[0m");
+                    Console.WriteLine(coloredLine);
+                    Thread.Sleep(75);
+                }                                      
         }
-
+  
         public void FadeBank()
         {
             string[] asciiArt = {

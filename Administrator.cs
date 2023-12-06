@@ -125,13 +125,12 @@ namespace Bank_gruppprojekt
         public static void Menu(Administrator currentAdmin)
         {
 
-            Console.Clear();
-            Console.WriteLine($"Welcome Administrator {currentAdmin.Username}, you are in the Admin Menu.");
+            Console.Clear();            
             int option = 0;
 
             do
             {
-                PrintOptions();
+                PrintOptions(currentAdmin);
                 try
                 {
                     if (int.TryParse(Console.ReadLine(), out option))
@@ -148,6 +147,12 @@ namespace Bank_gruppprojekt
                                 Console.WriteLine("Invalid option. Try again.");
                                 break;
                         }
+                        Console.WriteLine("");
+                        Console.WriteLine("Press enter to exit to Main Menu");
+                        Console.ReadLine();
+                        Console.Clear();
+                        AviciiBank art = new AviciiBank();
+                        art.PaintBank();
                     }
                     else
                     {
@@ -161,20 +166,24 @@ namespace Bank_gruppprojekt
             } while (option != 2);
         }
 
-        public static void PrintOptions()
+        public static void PrintOptions(Administrator currentAdmin)
         {
-            Console.WriteLine("Choose from the menu");
-            Console.WriteLine("1. Create User");
-            Console.WriteLine("2. Exit");
-        }     
+
+            Console.WriteLine("╔══════════════════════════════════╗");
+            Console.WriteLine($"║           {currentAdmin.Username}'s Menu           ║");
+            Console.WriteLine("╠══════════════════════════════════╣");
+            Console.WriteLine("║ 1. Create User                   ║");
+            Console.WriteLine("║ 2. Exit                          ║");
+            Console.WriteLine("╚══════════════════════════════════╝");
+        }
 
         public static Administrator AuthenticateAdministrator(string username, string pin)
         {
-            Console.WriteLine($"Attempting to authenticate administrator: {username}, PIN: {pin}");
+            
 
             if (int.TryParse(pin, out int pinValue))
             {
-                Console.WriteLine($"Parsed PIN as integer: {pinValue}");
+                
 
                 Administrator authenticatedAdministrator = Administrators.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin.ToString() == pin);
 
@@ -190,15 +199,10 @@ namespace Bank_gruppprojekt
                 return authenticatedAdministrator;
             }
             else
-            {
-                Console.WriteLine($"Invalid PIN format for administrator: {username}");
+            {                
                 return null;
             }
         }
-        public static string GetPin()
-        {
-            Console.WriteLine("Enter PIN");
-            return Console.ReadLine();
-        }
+
     }
 }

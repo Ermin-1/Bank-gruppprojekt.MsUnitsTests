@@ -26,6 +26,8 @@ namespace Bank_gruppprojekt
         public static User LoginIn()
         {           
             Console.WriteLine("\t \tWelcome to the bank");
+            AviciiBank art = new AviciiBank();
+            art.PaintBank();
             int loginAttempts = 0;
             User authenticatedUser = null;
 
@@ -34,8 +36,7 @@ namespace Bank_gruppprojekt
                 try
                 {
                     
-                    AviciiBank art = new AviciiBank();
-                    art.PaintBank();
+                    
                     Console.Write("\t \tEnter username: ");
                     string username = Console.ReadLine();
                     Console.Write("\t \tEnter PIN: ");
@@ -75,7 +76,7 @@ namespace Bank_gruppprojekt
                 }
                 if (loginAttempts == MaxLoginAttempts)
                 {
-                    AviciiBank art = new AviciiBank();
+                    
                     art.FadeBank();
 
                     Console.WriteLine("Too many unsuccessful login attempts. You are now locked out");

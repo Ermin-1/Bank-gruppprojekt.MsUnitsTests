@@ -34,7 +34,7 @@ namespace Bank_gruppprojekt
             new Customer("Ermin", "1111"),
             new Customer("Oskar", "1234"),
             new Customer("Ludde", "3545"),
-            new Customer("Isaac", "4355")
+            new Customer("Isac", "4355")
         };
 
             Customers[0].Accounts.Add(new Account("USA-account", 2000, "USD"));
@@ -418,12 +418,6 @@ namespace Bank_gruppprojekt
                                 await Task.Delay(15 * 60 * 1000); // 15 min
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-
-                               
-                                //Console.WriteLine($"New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is {receiver.Accounts[toAccountIndex - 1].Balance}{receiver.Accounts[toAccountIndex - 1].Currency}");
-
-                                //currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
-                                //receiver.LogDeposit(transferAmount, receiver.Accounts[toAccountIndex - 1].Currency);
                             }
                             else
                             {
@@ -585,7 +579,7 @@ namespace Bank_gruppprojekt
         public static void PrintOptions(Customer currentCustomer)
         {
             Console.WriteLine(" ╔══════════════════════════════════╗");
-            Console.WriteLine( $" ║           {currentCustomer.Username}'s Menu           ║");
+            Console.WriteLine(" ║            Mega Bank             ║");
             Console.WriteLine(" ╠══════════════════════════════════╣");
             Console.WriteLine(" ║ 1. Deposit                       ║");
             Console.WriteLine(" ║ 2. Withdrawal                    ║");

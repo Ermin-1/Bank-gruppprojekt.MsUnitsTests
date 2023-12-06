@@ -170,7 +170,7 @@ namespace Bank_gruppprojekt
         {
 
             Console.WriteLine("╔══════════════════════════════════╗");
-            Console.WriteLine($"║           {currentAdmin.Username}'s Menu           ║");
+            Console.WriteLine("║        Administrator Menu        ║");
             Console.WriteLine("╠══════════════════════════════════╣");
             Console.WriteLine("║ 1. Create User                   ║");
             Console.WriteLine("║ 2. Exit                          ║");

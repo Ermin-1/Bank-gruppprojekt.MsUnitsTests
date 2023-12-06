@@ -34,7 +34,7 @@ namespace Bank_gruppprojekt
             new Customer("Ermin", "1111"),
             new Customer("Oskar", "1234"),
             new Customer("Ludde", "3545"),
-            new Customer("Isac", "4355")
+            new Customer("Isaac", "4355")
         };
 
             Customers[0].Accounts.Add(new Account("USA-account", 2000, "USD"));
@@ -168,15 +168,12 @@ namespace Bank_gruppprojekt
 
         public static Customer AuthenticateCustomer(string username, string pin)
         {
-            Console.WriteLine($"Attempting to authenticate customer: {username}, PIN: {pin}");
-
+            
             if (!int.TryParse(pin, out int pinValue))
             {
                 return null;
             }
-
-            Console.WriteLine($"Parsed PIN as integer: {pinValue}");
-
+           
             Customer authenticatedCustomer = Customers.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin.ToString() == pin);
 
             if (authenticatedCustomer != null)
@@ -194,13 +191,12 @@ namespace Bank_gruppprojekt
         public static void Menu(Customer currentCustomer)
         {
 
-            Console.Clear();
-            Console.WriteLine($"Welcome {currentCustomer.Username}");
+            Console.Clear();            
             int option = 0;
 
             do
             {
-                PrintOptions();
+                PrintOptions(currentCustomer);
                 try
                 {
                     if (int.TryParse(Console.ReadLine(), out option))
@@ -231,17 +227,19 @@ namespace Bank_gruppprojekt
                                 break;
                             case 8:
                                 Console.WriteLine("Exiting...");
+                                Console.WriteLine("");
+                                Console.WriteLine("Press enter to exit to Login");
+                                Console.ReadLine();
+                                Console.Clear();
+                                AviciiBank art = new AviciiBank();
+                                art.PaintBank();
 
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
                                 break;
 
-                        }
-                        Console.WriteLine("");
-                        Console.WriteLine("Press enter to exit to Main Menu");
-                        Console.ReadLine();
-                        Console.Clear();
+                        }                     
                     }
                     else
                     {
@@ -257,12 +255,21 @@ namespace Bank_gruppprojekt
 
         public static void AddNewAccount(Customer currentCustomer)
         {
-
-
             Console.WriteLine("Enter the type of the new account:");
-            string accountType = Console.ReadLine();
+           
+            string accountType;
+            do
+            {
+                accountType = Console.ReadLine();
 
-            Administrator.DisplayInterest(accountType);
+                if (string.IsNullOrWhiteSpace(accountType) || accountType.Length < 4)
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid account type with at least 4 characters.");
+                }
+
+            } while (string.IsNullOrWhiteSpace(accountType) || accountType.Length < 4);
+
+            Administrator.DisplayInterest(accountType);           
 
             Console.WriteLine("Enter the initial balance:");
             if (double.TryParse(Console.ReadLine(), out double initialBalance))
@@ -277,6 +284,10 @@ namespace Bank_gruppprojekt
             else
             {
                 Console.WriteLine("Invalid input. Please enter a valid number.");
+                Console.WriteLine("Press enter to exit to Main Menu");
+                Console.ReadLine();
+                Console.Clear();
+
             }
         }
 
@@ -571,27 +582,21 @@ namespace Bank_gruppprojekt
                 return logActivity;
             }
 
-        public static void PrintOptions()
+        public static void PrintOptions(Customer currentCustomer)
         {
-            Console.WriteLine("╔══════════════════════════════════╗");
-            Console.WriteLine("║       Choose from the menu       ║");
-            Console.WriteLine("╠══════════════════════════════════╣");
-            Console.WriteLine("║ 1. Deposit                       ║");
-            Console.WriteLine("║ 2. Withdrawal                    ║");
-            Console.WriteLine("║ 3. Show balance                  ║");
-            Console.WriteLine("║ 4. Open a new account            ║");
-            Console.WriteLine("║ 5. Transfer money                ║");
-            Console.WriteLine("║ 6. Check history of transactions ║");
-            Console.WriteLine("║ 7. Take a loan                   ║");
-            Console.WriteLine("║ 8. Exit                          ║");
-            Console.WriteLine("╚══════════════════════════════════╝");
+            Console.WriteLine(" ╔══════════════════════════════════╗");
+            Console.WriteLine( $" ║           {currentCustomer.Username}'s Menu           ║");
+            Console.WriteLine(" ╠══════════════════════════════════╣");
+            Console.WriteLine(" ║ 1. Deposit                       ║");
+            Console.WriteLine(" ║ 2. Withdrawal                    ║");
+            Console.WriteLine(" ║ 3. Show balance                  ║");
+            Console.WriteLine(" ║ 4. Open a new account            ║");
+            Console.WriteLine(" ║ 5. Transfer money                ║");
+            Console.WriteLine(" ║ 6. Check history of transactions ║");
+            Console.WriteLine(" ║ 7. Take a loan                   ║");
+            Console.WriteLine(" ║ 8. Exit                          ║");
+            Console.WriteLine(" ╚══════════════════════════════════╝");
         }
-
-        public static string GetPin()
-            {
-                Console.WriteLine("Enter PIN");
-                return Console.ReadLine();
-            }
     }
 }
 

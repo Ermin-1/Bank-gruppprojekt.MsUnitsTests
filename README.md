@@ -1,9 +1,11 @@
 # Bank-gruppprojekt🏦
 
 Welcome to the Bank Group Project! 
+
 This collaborative effort brings together the coding expertise of several contributors to develop a robust banking system simulation. Whether you're a customer looking to manage your accounts or an administrator overseeing the financial operations, this project has got you covered.
 
 Table of Contents:
+
 Introduction
 Features
 Usage
@@ -15,6 +17,7 @@ Introduction
 In today's digital age, banking systems play a crucial role in facilitating financial transactions and providing users with a secure platform to manage their funds. The Bank Group Project aims to replicate key aspects of real-world banking, offering a comprehensive set of features for both customers and administrators.
 
 Features:
+
 User Authentication
 Customers: Authenticate with a username and PIN.
 Administrators: Access administrative functionalities with specific credentials.
@@ -34,21 +37,27 @@ Usage
 The Bank Group Project provides an interactive command-line interface for users. Both customers and administrators can navigate through intuitive menus to perform a wide range of banking operations. The system prompts users for necessary information such as usernames, PINs, and transaction details, ensuring a user-friendly experience.
 
 Code Structure:
+
 The project's codebase is structured around two primary classes: Administrator and Customer. Each class encapsulates functionalities tailored to its respective role in the banking system.
 
 Administrator Class:
+
 Manages administrative tasks, including user creation and rate setting.
 Enables the creation of new customer accounts.
 
 Customer Class:
+
 Handles customer-specific operations, such as deposits, withdrawals, and transfers.
 Manages account creation, loan requests, and transaction logging.
 
 How to Run:
+
 Clone the Repository: Clone the project repository to your local machine.
 Open in Development Environment: Launch your preferred C# development environment and open the project solution.
 Build and Run: Build the application and run it.
 During runtime, provide the required input when prompted, including usernames, PINs, and any transaction details.
 
-Contributing
+Contributing:
+
+
 Contributions to the Bank Group Project are highly encouraged! If you encounter any issues, have suggestions for improvements, or want to add new features, feel free to open an issue or submit a pull request.

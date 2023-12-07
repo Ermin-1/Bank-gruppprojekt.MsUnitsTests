@@ -321,18 +321,33 @@ namespace Bank_gruppprojekt
 
                     if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
                     {
-                        if (fromAccountIndex == toAccountIndex)
+                        // Check if the source and destination accounts are the same
+                        if (fromAccountIndex != toAccountIndex)
                         {
-                            Console.WriteLine("Cannot transfer money to the same account. Please choose a different destination account.");
-                        }
-                        else
-                        {
-                            if (currentCustomer.Accounts[fromAccountIndex - 1].Currency != currentCustomer.Accounts[toAccountIndex - 1].Currency)
+                            // Get the currencies of the source and destination accounts
+                            string sourceCurrency = currentCustomer.Accounts[fromAccountIndex - 1].Currency;
+                            string targetCurrency = currentCustomer.Accounts[toAccountIndex - 1].Currency;
+
+                            // Check if the source and destination accounts have valid currencies
+                            if ((sourceCurrency == "SEK" || sourceCurrency == "USD") && (targetCurrency == "SEK" || targetCurrency == "USD"))
                             {
-                                Console.WriteLine("Invalid currency. Cannot transfer between accounts with different currencies.");
-                            }
-                            else
-                            {
+                                double convertedAmount = transferAmount; // Initialize converted amount
+
+                                // Check if currency conversion is needed
+                                if (sourceCurrency != targetCurrency)
+                                {
+                                    double sourceToTargetRate = Administrator.GetExchangeRate(sourceCurrency, targetCurrency);
+                                    double targetToSourceRate = Administrator.GetExchangeRate(targetCurrency, sourceCurrency);
+
+                                    if (sourceToTargetRate == 1.0 || targetToSourceRate == 1.0)
+                                    {
+                                        Console.WriteLine("Invalid currency exchange rates. Unable to complete the transfer.");
+                                        return;
+                                    }
+
+                                    convertedAmount = transferAmount * sourceToTargetRate;
+                                }
+
                                 if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
                                 {
                                     Console.WriteLine("Insufficient funds for the selected account.");
@@ -340,15 +355,23 @@ namespace Bank_gruppprojekt
                                 else
                                 {
                                     currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
-                                    currentCustomer.Accounts[toAccountIndex - 1].Balance += transferAmount;
+                                    currentCustomer.Accounts[toAccountIndex - 1].Balance += convertedAmount;
 
-                                    Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+                                    Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
+                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");
 
-                                    currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
-                                    currentCustomer.LogDeposit(transferAmount, currentCustomer.Accounts[toAccountIndex - 1].Currency);
+                                    currentCustomer.LogWithdraw(transferAmount, sourceCurrency);
+                                    currentCustomer.LogDeposit(convertedAmount, targetCurrency);
                                 }
                             }
+                            else
+                            {
+                                Console.WriteLine("Invalid currencies. Transfers are only allowed between SEK and USD accounts.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Transferring money to the same account is not allowed.");
                         }
                     }
                     else
@@ -369,8 +392,8 @@ namespace Bank_gruppprojekt
 
         private static async Task TransferToAnotherUser(Customer currentCustomer)
         {
-
             double exchangeRate = Administrator.GetExchangeRate("USD", "SEK");
+
             Console.WriteLine("Which user do you want to transfer money to?");
             DisplayCustomer(Customers, currentCustomer);
 
@@ -398,15 +421,42 @@ namespace Bank_gruppprojekt
 
                             if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {
-                                Console.WriteLine("Transaction successful. Waiting 15 minute for the transaction to go through...");
-                                Console.WriteLine("This will be done automatically, you can go back to the menu.");
-                                
-                                currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
-                                Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
-                                    $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                await Task.Delay(0 * 5 * 1000); // 15 min
-                                receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
+                                // Check if the source and destination accounts have valid currencies
+                                string sourceCurrency = currentCustomer.Accounts[fromAccountIndex - 1].Currency;
+                                string targetCurrency = receiver.Accounts[toAccountIndex - 1].Currency;
 
+                                if ((sourceCurrency == "SEK" || sourceCurrency == "USD") && (targetCurrency == "SEK" || targetCurrency == "USD"))
+                                {
+                                    double convertedAmount = transferAmount; // Initialize converted amount
+
+                                    // Check if currency conversion is needed
+                                    if (sourceCurrency != targetCurrency)
+                                    {
+                                        double sourceToTargetRate = Administrator.GetExchangeRate(sourceCurrency, targetCurrency);
+                                        double targetToSourceRate = Administrator.GetExchangeRate(targetCurrency, sourceCurrency);
+
+                                        if (sourceToTargetRate == 1.0 || targetToSourceRate == 1.0)
+                                        {
+                                            Console.WriteLine("Invalid currency exchange rates. Unable to complete the transfer.");
+                                            return;
+                                        }
+
+                                        convertedAmount = transferAmount * sourceToTargetRate;
+                                    }
+
+                                    // Perform the transfer
+                                    currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                                    Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
+                                        $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}." +
+                                        $"\nThe receiver will be able to see the transfer of funds in approximately 15 minutes.");
+                                    await Task.Delay(1 * 5 * 1000); // 15 min
+
+                                    receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;                                  
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid currencies. Transfers are only allowed between SEK and USD accounts.");
+                                }
                             }
                             else
                             {
@@ -428,7 +478,6 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid user selection for transferring money.");
             }
-
         }
         public static void DisplayCustomer(List<Customer> customers, Customer currentCustomer)
             {

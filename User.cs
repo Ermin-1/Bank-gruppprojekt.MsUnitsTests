@@ -23,7 +23,7 @@ namespace Bank_gruppprojekt
             Pin = pin;
         } 
         
-        public static User LoginIn()
+        public static User LogIn()
         {           
             Console.WriteLine("\t \tWelcome to the bank");
             AviciiBank art = new AviciiBank();
@@ -64,14 +64,14 @@ namespace Bank_gruppprojekt
                     }
                     else
                     {
-                        Console.WriteLine($"\u001b[31mAuthentication failed for user '{username}'. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
+                        Console.WriteLine($"\t\u001b[31mAuthentication failed for user '{username}'. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
                         loginAttempts++;
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
-                    Console.WriteLine($"\u001b[31mAuthentication failed. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
+                    Console.WriteLine($"\t\u001b[31mAuthentication failed. Attempts left: {MaxLoginAttempts - loginAttempts - 1}\u001b[0m");
                     loginAttempts++;
                 }
                 if (loginAttempts == MaxLoginAttempts)

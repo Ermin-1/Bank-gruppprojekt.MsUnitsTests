@@ -189,7 +189,7 @@ namespace Bank_gruppprojekt
 
                 if (authenticatedAdministrator != null)
                 {
-                    Console.WriteLine($"\u001b[32mAuthentication successful for administrator: {username}\u001b[0m");
+                    Console.WriteLine($"\t\u001b[32mAuthentication successful for administrator: {username}\u001b[0m");
                 }
                 return authenticatedAdministrator;
             }

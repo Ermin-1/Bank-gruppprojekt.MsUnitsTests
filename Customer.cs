@@ -171,7 +171,7 @@ namespace Bank_gruppprojekt
 
             if (authenticatedCustomer != null)
             {
-                Console.WriteLine($"\u001b[32mAuthentication successful for customer: {username}\u001b[0m");
+                Console.WriteLine($"\t\u001b[32mAuthentication successful for customer: {username}\u001b[0m");
             }
             return authenticatedCustomer;
         }
@@ -565,7 +565,6 @@ namespace Bank_gruppprojekt
             }
         }
 
-
         public double GetMaxLoanAmount(int accountIndex)
         {
             const double loanLimitMultiplier = 5.0;
@@ -580,26 +579,27 @@ namespace Bank_gruppprojekt
         }
 
         private void DepositLoan(double loanAmount, int accountIndex)
-            {
-                Accounts[accountIndex].Balance += loanAmount;
-            }
+        {
+            Accounts[accountIndex].Balance += loanAmount;
+        }
 
 
-            public void LogDeposit(double amount, string currency)
-            {
-                string logBoi = $"Deposit: {amount}{currency}";
-                logActivity.Add(logBoi);
-                Console.WriteLine(logBoi);
-            }
+        public void LogDeposit(double amount, string currency)
+        {
+            string logBoi = $"Deposit: {amount}{currency}";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
 
-            public void LogWithdraw(double amount, string currency)
-            {
-                string logBoi = $"Withdrawl: {amount}{currency}";
-                logActivity.Add(logBoi);
-                Console.WriteLine(logBoi);
-            }
+        public void LogWithdraw(double amount, string currency)
+        {
+            string logBoi = $"Withdrawl: {amount}{currency}";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
 
-            public static void PrintLog(Customer currentCustomer)
+
+        public static void PrintLog(Customer currentCustomer)
             { currentCustomer.GetLog();
                 foreach (var logboi in currentCustomer.logActivity)
                 {

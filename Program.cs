@@ -9,7 +9,7 @@ namespace BankApplication
     {
         static void Main(string[] args)
         {
-            User.LoginIn();           
+            User.LogIn();           
         }        
     }
 }

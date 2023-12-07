@@ -358,10 +358,7 @@ namespace Bank_gruppprojekt
                                     currentCustomer.Accounts[toAccountIndex - 1].Balance += convertedAmount;
 
                                     Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
-                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");
-
-                                    currentCustomer.LogWithdraw(transferAmount, sourceCurrency);
-                                    currentCustomer.LogDeposit(convertedAmount, targetCurrency);
+                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");                                 
                                 }
                             }
                             else

@@ -22,6 +22,8 @@ namespace Bank_gruppprojekt
 
         private double totalBorrowedAmount = 0;
 
+        private const double LoanInterestRate = 0.04;
+
         public DateTime LastLoanTime { get; set; } = DateTime.MinValue;
 
 
@@ -109,7 +111,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("Accounts:");
             for (int i = 0; i < customer.Accounts.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {customer.Accounts[i].Accounttype}");
+                Console.WriteLine($"{i + 1}. [{customer.Accounts[i].Accounttype}] {customer.Accounts[i].Balance} {customer.Accounts[i].Currency}");
             }
         }
 
@@ -147,18 +149,11 @@ namespace Bank_gruppprojekt
         }
 
         public static void ShowBalance(Customer currentCustomer)
-        {
-            Console.WriteLine("Which account balance do you want to check?");
+        {        
             currentCustomer.DisplayAccounts(currentCustomer);
-
-            if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex >= 0 && accountIndex <= currentCustomer.Accounts.Count)
-            {
-                Console.WriteLine($"Your balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance} {currentCustomer.Accounts[accountIndex - 1].Currency}");
-            }
-            else
-            {
-                Console.WriteLine("Invalid account selection.");
-            }
+            Console.WriteLine("\nPress enter to exit to Login");
+            Console.ReadLine();
+            Console.Clear();
         }
 
         public static List<Customer> GetCustomerWithAccounts()
@@ -243,7 +238,8 @@ namespace Bank_gruppprojekt
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                        Console.Clear();
+                        Console.WriteLine("Invalid input. Please enter a valid number. 1-8");                        
                     }
                 }
                 catch (Exception ex)
@@ -331,33 +327,33 @@ namespace Bank_gruppprojekt
 
                     if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
                     {
-
-                        double sourceToTargetRate = Administrator.GetExchangeRate(currentCustomer.Accounts[fromAccountIndex - 1].Currency, currentCustomer.Accounts[toAccountIndex - 1].Currency);
-                        double targetToSourceRate = Administrator.GetExchangeRate(currentCustomer.Accounts[toAccountIndex - 1].Currency, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
-
-                        if (sourceToTargetRate == 1.0 || targetToSourceRate == 1.0)
+                        if (fromAccountIndex == toAccountIndex)
                         {
-                            Console.WriteLine("Invalid currency exchange rates. Unable to complete the transfer.");
+                            Console.WriteLine("Cannot transfer money to the same account. Please choose a different destination account.");
                         }
                         else
                         {
-                            double convertedAmount = transferAmount * sourceToTargetRate;
-
-                            if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
+                            if (currentCustomer.Accounts[fromAccountIndex - 1].Currency != currentCustomer.Accounts[toAccountIndex - 1].Currency)
                             {
-                                Console.WriteLine("Insufficient funds for the selected account.");
+                                Console.WriteLine("Invalid currency. Cannot transfer between accounts with different currencies.");
                             }
                             else
                             {
-                                currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
-                                currentCustomer.Accounts[toAccountIndex - 1].Balance += convertedAmount;
+                                if (currentCustomer.Accounts[fromAccountIndex - 1].Balance < transferAmount)
+                                {
+                                    Console.WriteLine("Insufficient funds for the selected account.");
+                                }
+                                else
+                                {
+                                    currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
+                                    currentCustomer.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
-                                Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
-                                
-                                
-                                currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
-                                currentCustomer.LogDeposit(convertedAmount, currentCustomer.Accounts[toAccountIndex - 1].Currency);
+                                    Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
+                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {currentCustomer.Accounts[toAccountIndex - 1].Currency}");
+
+                                    currentCustomer.LogWithdraw(transferAmount, currentCustomer.Accounts[fromAccountIndex - 1].Currency);
+                                    currentCustomer.LogDeposit(transferAmount, currentCustomer.Accounts[toAccountIndex - 1].Currency);
+                                }
                             }
                         }
                     }
@@ -415,7 +411,7 @@ namespace Bank_gruppprojekt
                                 currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                 Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
                                     $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance}{currentCustomer.Accounts[fromAccountIndex - 1].Currency}");
-                                await Task.Delay(15 * 60 * 1000); // 15 min
+                                await Task.Delay(0 * 5 * 1000); // 15 min
                                 receiver.Accounts[toAccountIndex - 1].Balance += transferAmount;
 
                             }
@@ -485,9 +481,7 @@ namespace Bank_gruppprojekt
                             Console.WriteLine("Enter the number of months for the loan:");
                             if (int.TryParse(Console.ReadLine(), out int loanMonths) && loanMonths > 0)
                             {
-                                double interestRate = 0.04; // Fast ränta på 4%
-
-                                double totalInterest = loanAmount * interestRate * loanMonths;
+                                double totalInterest = loanAmount * LoanInterestRate * loanMonths;
 
                                 if (currentCustomer.Accounts[accountIndex].Currency.ToUpper() == "USD")
                                 {
@@ -497,12 +491,13 @@ namespace Bank_gruppprojekt
 
                                 currentCustomer.DepositLoan(loanAmount, accountIndex);
                                 currentCustomer.totalBorrowedAmount += loanAmount;
+
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
+
                                 Thread.Sleep(3000);
                                 Console.Clear();
                                 currentCustomer.LastLoanTime = DateTime.Now;
-
                             }
                             else
                             {

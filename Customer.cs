@@ -24,8 +24,6 @@ namespace Bank_gruppprojekt
 
         public DateTime LastLoanTime { get; set; } = DateTime.MinValue;
 
-
-
         static Customer()
         {
 
@@ -180,11 +178,6 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine($"\u001b[32mAuthentication successful for customer: {username}\u001b[0m");
             }
-            else
-            {
-                //Console.WriteLine($"\u001b[31mAuthentication failed for customer: {username}\u001b[0m");
-            }
-
             return authenticatedCustomer;
         }
 
@@ -410,7 +403,6 @@ namespace Bank_gruppprojekt
                             {
                                 Console.WriteLine("Transaction successful. Waiting 15 minute for the transaction to go through...");
                                 Console.WriteLine("This will be done automatically, you can go back to the menu.");
-
                                 
                                 currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                 Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +

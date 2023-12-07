@@ -35,8 +35,7 @@ namespace Bank_gruppprojekt
             {
                 try
                 {
-                    
-                    
+
                     Console.Write("\t \tEnter username: ");
                     string username = Console.ReadLine();
                     Console.Write("\t \tEnter PIN: ");
@@ -51,7 +50,7 @@ namespace Bank_gruppprojekt
 
                     if (authenticatedUser != null)
                     {
-                        //Console.WriteLine($"\u001b[32mAuthenticated as: {authenticatedUser.GetType().Name}\u001b[0m");
+                        loginAttempts = 0;
                         Thread.Sleep(3000);
                         Console.Clear();
                         if (authenticatedUser is Customer)

@@ -264,6 +264,7 @@ namespace Bank_gruppprojekt
             if (double.TryParse(Console.ReadLine(), out double initialBalance))
             {
                 Console.WriteLine("Enter the currency (e.g., SEK, USD):");
+             
                 string currency = Console.ReadLine();
 
                 currentCustomer.CreateAccount(accountType, initialBalance, currency);
@@ -487,7 +488,8 @@ namespace Bank_gruppprojekt
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
 
-                                Thread.Sleep(3000);
+                                Console.WriteLine("\nPress enter to exit to Main Menu");
+                                Console.ReadLine();
                                 Console.Clear();
                                 currentCustomer.LastLoanTime = DateTime.Now;
                             }

@@ -89,7 +89,7 @@ namespace Bank_gruppprojekt
 
             if (newUser != null)
             {
-                Customer.AddUser(newUser); // Add the new user to the Customers list
+                Customer.AddUser(newUser); 
                 Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
             }
             else
@@ -191,11 +191,6 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"\u001b[32mAuthentication successful for administrator: {username}\u001b[0m");
                 }
-                else
-                {
-                    //Console.WriteLine($"\u001b[31mAuthentication failed for administrator: {username}\u001b[0m");
-                }
-
                 return authenticatedAdministrator;
             }
             else

@@ -211,16 +211,19 @@ namespace Bank_gruppprojekt
                                 currentAdmin.AdminDeleteAccount(currentAdmin);
                                 break;
                             case 3:
+                                Console.Clear();
                                 Console.WriteLine("\u001b[31mExiting...\u001b[0m");
+                                Console.WriteLine("");
+                                Console.WriteLine("Press enter to exit to Login");
+                                Console.ReadLine();
+                                Console.Clear();
+                                AviciiBank art = new AviciiBank();
+                                art.PaintBank();
                                 break;
                             default:
                                 Console.WriteLine("Invalid option. Try again.");
                                 break;
                         }
-                        Console.WriteLine("");
-                        Console.WriteLine("Press enter to exit to Main Menu");
-                        Console.ReadLine();
-                        Console.Clear();
                     }
                     else
                     {

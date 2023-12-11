@@ -96,6 +96,8 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("User creation failed. Please check the input and try again.");
             }
+            Thread.Sleep(3000);
+            Console.Clear();
         }
 
 

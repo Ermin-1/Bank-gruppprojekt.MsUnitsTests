@@ -150,6 +150,8 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine($"User '{targetUsername}' not found.");
             }
+            Thread.Sleep(3000);
+            Console.Clear();
         }
 
 
@@ -187,6 +189,8 @@ namespace Bank_gruppprojekt
 
             targetUser.Accounts.Remove(targetAccount);
             Console.WriteLine($"Account '{accountName}' deleted successfully for user '{user.Username}'.");
+            Thread.Sleep(3000);
+            Console.Clear();
         }
 
         public static void Menu(Administrator currentAdmin)

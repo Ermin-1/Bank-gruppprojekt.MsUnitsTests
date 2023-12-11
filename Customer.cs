@@ -621,14 +621,14 @@ namespace Bank_gruppprojekt
 
         public void LogDeposit(double amount, string currency, Account targetAccount)
         {
-            string logBoi = $"[{DateTime.Now}] Deposit: {amount} {currency} to {targetAccount.Accounttype} ";
+            string logBoi = $"[{DateTime.Now}] Deposit: {amount} {currency} to [{targetAccount.Accounttype}] ";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }
 
         public void LogWithdraw(double amount, string currency, Account sourceAccount)
         {
-            string logBoi = $"[{DateTime.Now}] Withdrawal: {amount} {currency} from {sourceAccount.Accounttype} ";
+            string logBoi = $"[{DateTime.Now}] Withdrawal: {amount} {currency} from [{sourceAccount.Accounttype}] ";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }

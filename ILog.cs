@@ -9,7 +9,7 @@ namespace Bank_gruppprojekt
     public interface ILog
     {
         List<string> GetLog();
-        void LogDeposit(double ammount, string currency);
-        void LogWithdraw(double ammount, string currency);        
+        void LogDeposit(double ammount, string currency, Account account);
+        void LogWithdraw(double ammount, string currency, Account account);        
     }
 }

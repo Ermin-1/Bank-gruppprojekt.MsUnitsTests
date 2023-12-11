@@ -241,7 +241,7 @@ namespace Bank_gruppprojekt
             Console.WriteLine("║        Administrator Menu        ║");
             Console.WriteLine("╠══════════════════════════════════╣");
             Console.WriteLine("║ 1. Create User                   ║");
-            Console.WriteLine("║ 2. Delete User                   ║");
+            Console.WriteLine("║ 2. Delete Account                ║");
             Console.WriteLine("║ 3. Exit                          ║");
             Console.WriteLine("╚══════════════════════════════════╝");
         }

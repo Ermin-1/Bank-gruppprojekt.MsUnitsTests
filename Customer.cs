@@ -24,6 +24,10 @@ namespace Bank_gruppprojekt
 
         private const double LoanInterestRate = 0.04;
 
+        private double remainingLoanBalance = 0;
+
+        private double monthlyInstallment = 0;
+
         public DateTime LastLoanTime { get; set; } = DateTime.MinValue;
 
         static Customer()
@@ -229,6 +233,21 @@ namespace Bank_gruppprojekt
                                 Loan(currentCustomer);
                                 break;
                             case 8:
+                                Console.WriteLine("Select the account for loan repayment:");
+                                currentCustomer.DisplayAccounts(currentCustomer);
+
+                                int selectedRepayAccountIndex = -1;
+
+                                if (int.TryParse(Console.ReadLine(), out selectedRepayAccountIndex) && selectedRepayAccountIndex > 0 && selectedRepayAccountIndex <= currentCustomer.Accounts.Count)
+                                {
+                                    RepayLoan(currentCustomer, selectedRepayAccountIndex - 1);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error: Invalid account selection for loan repayment.");
+                                }
+                                break;
+                            case 9:
                                 Console.WriteLine("\u001b[31mExiting...\u001b[0m");
                                 Console.WriteLine("");
                                 Console.WriteLine("Press enter to exit to Login");
@@ -242,7 +261,7 @@ namespace Bank_gruppprojekt
                                 Console.WriteLine("Invalid option. Try again.");
                                 break;
 
-                        }                     
+                        }
                     }
                     else
                     {
@@ -506,18 +525,20 @@ namespace Bank_gruppprojekt
                 }
             }
 
-        public static void Loan(Customer currentCustomer)
+        public static int Loan(Customer currentCustomer)
         {
             if ((DateTime.Now - currentCustomer.LastLoanTime).TotalDays < 30)
             {
-                Console.WriteLine("You can only apply for one loan once every 30 days. If you need further help contact the bank.");
-                return;
+                Console.WriteLine("You can only apply for one loan once every 30 days. If you need further help, contact the bank.");
+                return -1;
             }
 
             Console.WriteLine("Select the account you want to loan money to:");
             currentCustomer.DisplayAccounts(currentCustomer);
 
-            if (int.TryParse(Console.ReadLine(), out int selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
+            int selectedAccountIndex = -1;
+
+            if (int.TryParse(Console.ReadLine(), out selectedAccountIndex) && selectedAccountIndex > 0 && selectedAccountIndex <= currentCustomer.Accounts.Count)
             {
                 int accountIndex = selectedAccountIndex - 1;
 
@@ -528,7 +549,7 @@ namespace Bank_gruppprojekt
                     if (remainingLoanAmount <= 0)
                     {
                         Console.WriteLine("You have reached the maximum loan limit. Unable to process another loan.");
-                        return;
+                        return -1;
                     }
 
                     Console.WriteLine($"Enter the amount you want to borrow (up to {remainingLoanAmount} {currentCustomer.Accounts[accountIndex].Currency}):");
@@ -548,16 +569,22 @@ namespace Bank_gruppprojekt
                                     totalInterest *= Administrator.usdToSekRate;
                                 }
 
+                                currentCustomer.remainingLoanBalance = loanAmount + totalInterest;
+                                currentCustomer.monthlyInstallment = currentCustomer.remainingLoanBalance / loanMonths;
+
                                 currentCustomer.DepositLoan(loanAmount, accountIndex);
                                 currentCustomer.totalBorrowedAmount += loanAmount;
 
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
                                 Console.WriteLine($"The loan interest rate is 4%. You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
+                                Console.WriteLine($"Your monthly installment will be {currentCustomer.monthlyInstallment} {currentCustomer.Accounts[accountIndex].Currency}.");
 
                                 Console.WriteLine("\nPress enter to exit to Main Menu");
                                 Console.ReadLine();
                                 Console.Clear();
                                 currentCustomer.LastLoanTime = DateTime.Now;
+
+                                return selectedAccountIndex;
                             }
                             else
                             {
@@ -582,6 +609,66 @@ namespace Bank_gruppprojekt
             else
             {
                 Console.WriteLine("Invalid account selection.");
+            }
+            return -1;
+        }
+
+        public static void RepayLoan(Customer currentCustomer, int accountIndex)
+        {
+            if (currentCustomer.remainingLoanBalance > 0)
+            {
+                Console.WriteLine($"You have {currentCustomer.remainingLoanBalance} {currentCustomer.Accounts[accountIndex].Currency} left to repay.");
+
+                Console.WriteLine("Do you want to make a repayment?");
+                Console.WriteLine("1. Yes");
+                Console.WriteLine("2. No");
+
+                if (int.TryParse(Console.ReadLine(), out int repayChoice) && (repayChoice == 1 || repayChoice == 2))
+                {
+                    if (repayChoice == 1)
+                    {
+                        Console.WriteLine("Enter the amount you want to repay:");
+
+                        if (double.TryParse(Console.ReadLine(), out double repaymentAmount) && repaymentAmount > 0)
+                        {
+                            if (repaymentAmount <= currentCustomer.remainingLoanBalance)
+                            {
+                                currentCustomer.remainingLoanBalance -= repaymentAmount;
+
+                                Console.WriteLine($"Repayment of {repaymentAmount} {currentCustomer.Accounts[accountIndex].Currency} successful.");
+                                Console.WriteLine($"Remaining loan balance: {currentCustomer.remainingLoanBalance} {currentCustomer.Accounts[accountIndex].Currency}.");
+
+                                if (currentCustomer.remainingLoanBalance <= 0)
+                                {
+                                    Console.WriteLine("Congratulations! You have fully repaid your loan.");
+
+                                    currentCustomer.remainingLoanBalance = 0;
+                                    currentCustomer.monthlyInstallment = 0;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Repayment amount exceeds the remaining loan balance. Remaining loan balance: {currentCustomer.remainingLoanBalance} {currentCustomer.Accounts[accountIndex].Currency}.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input for repayment amount. Please enter a valid number.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Exiting repayment menu.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("You have no outstanding loans to repay.");
             }
         }
 
@@ -659,7 +746,8 @@ namespace Bank_gruppprojekt
             Console.WriteLine(" ║ 5. Transfer money                ║");
             Console.WriteLine(" ║ 6. Check history of transactions ║");
             Console.WriteLine(" ║ 7. Take a loan                   ║");
-            Console.WriteLine(" ║ 8. Exit                          ║");
+            Console.WriteLine(" ║ 8. Repay Loan                    ║");
+            Console.WriteLine(" ║ 9. Exit                          ║");
             Console.WriteLine(" ╚══════════════════════════════════╝");
         }
     }

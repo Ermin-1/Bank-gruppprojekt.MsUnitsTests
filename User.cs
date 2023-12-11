@@ -39,7 +39,7 @@ namespace Bank_gruppprojekt
                     Console.Write("\t \tEnter username: ");
                     string username = Console.ReadLine();
                     Console.Write("\t \tEnter PIN: ");
-                    string pin = Console.ReadLine();
+                    string pin = MaskPassword();
 
                     authenticatedUser = Customer.AuthenticateCustomer(username, pin);
 
@@ -86,7 +86,27 @@ namespace Bank_gruppprojekt
                 }
             }
             return authenticatedUser;
-        }        
+        }
+        private static string MaskPassword()
+        {
+            string password = "";
+            ConsoleKeyInfo key;
+
+            do
+            {
+                key = Console.ReadKey(true);
+
+                // Ignore any key that isn't a valid password character
+                if (!char.IsControl(key.KeyChar))
+                {
+                    password += key.KeyChar;
+                    Console.Write("*"); // Print asterisk for each character
+                }
+            } while (key.Key != ConsoleKey.Enter);
+
+            Console.WriteLine(); // Move to the next line after pressing Enter
+            return password;
+        }
     }
 }
 

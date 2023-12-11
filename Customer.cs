@@ -531,7 +531,7 @@ namespace Bank_gruppprojekt
                                 currentCustomer.totalBorrowedAmount += loanAmount;
 
                                 Console.WriteLine($"Loan of {loanAmount} {currentCustomer.Accounts[accountIndex].Currency} successfully deposited into your {currentCustomer.Accounts[accountIndex].Accounttype} account.");
-                                Console.WriteLine($"You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
+                                Console.WriteLine($"The loan interest rate is 4%. You will need to pay {totalInterest} {currentCustomer.Accounts[accountIndex].Currency} in interest for the {loanMonths}-month loan.");
 
                                 Console.WriteLine("\nPress enter to exit to Main Menu");
                                 Console.ReadLine();

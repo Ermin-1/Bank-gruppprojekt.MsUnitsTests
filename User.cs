@@ -95,16 +95,15 @@ namespace Bank_gruppprojekt
             do
             {
                 key = Console.ReadKey(true);
-
-                // Ignore any key that isn't a valid password character
+ 
                 if (!char.IsControl(key.KeyChar))
                 {
                     password += key.KeyChar;
-                    Console.Write("*"); // Print asterisk for each character
+                    Console.Write("*"); 
                 }
             } while (key.Key != ConsoleKey.Enter);
 
-            Console.WriteLine(); // Move to the next line after pressing Enter
+            Console.WriteLine(); 
             return password;
         }
     }

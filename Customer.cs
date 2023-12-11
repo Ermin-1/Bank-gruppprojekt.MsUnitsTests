@@ -16,7 +16,7 @@ namespace Bank_gruppprojekt
         public const int MaxLoginAttempts = 3;
         public List<Account> Accounts { get; set; }
 
-        private static List<Customer> Customers;
+        public static List<Customer> Customers;
 
         private List<string> logActivity = new List<string>();        
 
@@ -82,6 +82,7 @@ namespace Bank_gruppprojekt
                     Console.WriteLine($"Your new balance for {currentCustomer.Accounts[accountIndex - 1].Accounttype} account is {currentCustomer.Accounts[accountIndex - 1].Balance}{currentCustomer.Accounts[accountIndex - 1].Currency}");
 
                     currentCustomer.LogDeposit(deposit, currentCustomer.Accounts[accountIndex - 1].Currency);
+
                 }
                 else
                 {
@@ -92,6 +93,9 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid account selection.");
             }
+            Console.WriteLine("\nPress enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
         }
         public void CreateAccount(string accountType, double initialBalance, string currency)
         {            
@@ -99,7 +103,7 @@ namespace Bank_gruppprojekt
             Accounts.Add(newAccount);
 
           
-            LogDeposit(initialBalance, currency);
+            
         }
 
 
@@ -152,6 +156,9 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid account selection.");
             }
+            Console.WriteLine("\nPress enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
         }
 
         public static void ShowBalance(Customer currentCustomer)
@@ -365,6 +372,8 @@ namespace Bank_gruppprojekt
                                     currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                     currentCustomer.Accounts[toAccountIndex - 1].Balance += convertedAmount;
 
+                                    currentCustomer.LogTransferToOwnAccounts(convertedAmount, targetCurrency, currentCustomer.Accounts[fromAccountIndex - 1], currentCustomer.Accounts[toAccountIndex - 1]);
+
                                     Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
                                     Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");                                 
                                 }
@@ -456,7 +465,10 @@ namespace Bank_gruppprojekt
                                         $"\nThe receiver will be able to see the transfer of funds in approximately 15 minutes.");
                                     await Task.Delay(1 * 5 * 1000); // 15 min
 
-                                    receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;                                  
+                                    receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;
+
+                                    //currentCustomer.LogTransferWitdrawl(transferAmount, sourceCurrency, currentCustomer.Accounts[fromAccountIndex - 1], receiver.Accounts[toAccountIndex - 1]);
+                                    currentCustomer.LogTransferToAnotherUser(convertedAmount, targetCurrency, currentCustomer.Accounts[fromAccountIndex - 1], receiver.Accounts[toAccountIndex - 1], receiver);
                                 }
                                 else
                                 {
@@ -586,34 +598,49 @@ namespace Bank_gruppprojekt
             return totalBalance * loanLimitMultiplier;
         }
 
+
+
         private void DepositLoan(double loanAmount, int accountIndex)
         {
             Accounts[accountIndex].Balance += loanAmount;
         }
 
+        public void LogTransferToAnotherUser(double amount, string currency, Account sourceAccount, Account targetAccount, Customer targetCustomer)
+        {
+            string logBoi = $"[{DateTime.Now}] Transfered : {amount} {currency} from {sourceAccount.Accounttype} to {targetCustomer.Username}'s {targetAccount.Accounttype} account";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
+
+        public void LogTransferToOwnAccounts(double amount, string currency, Account sourceAccount, Account targetAccount)
+        {
+            string logBoi = $"[{DateTime.Now}] Transfered: {amount} {currency} from {sourceAccount.Accounttype} to {targetAccount.Accounttype}";
+            logActivity.Add(logBoi);
+            Console.WriteLine(logBoi);
+        }
 
         public void LogDeposit(double amount, string currency)
         {
-            string logBoi = $"Deposit: {amount}{currency}";
+            string logBoi = $"[{DateTime.Now}] Deposit: {amount} {currency} ";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }
 
         public void LogWithdraw(double amount, string currency)
         {
-            string logBoi = $"Withdrawl: {amount}{currency}";
+            string logBoi = $"[{DateTime.Now}] Withdrawal: {amount} {currency}";
             logActivity.Add(logBoi);
             Console.WriteLine(logBoi);
         }
 
 
         public static void PrintLog(Customer currentCustomer)
-            { currentCustomer.GetLog();
+        { currentCustomer.GetLog();
                 foreach (var logboi in currentCustomer.logActivity)
                 {
                     Console.WriteLine(logboi);
                 }
-            }
+        }
 
             public List<string> GetLog()
             {

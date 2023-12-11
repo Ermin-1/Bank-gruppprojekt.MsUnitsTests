@@ -64,7 +64,7 @@ namespace Bank_gruppprojekt
                 sekToUsdRate = 1 / newRate;
             }
         }
-        public void AdminCreateUser(Administrator adminUser) 
+        public void AdminCreateUser(Administrator adminUser)
         {
             if (adminUser == null || !Administrators.Contains(adminUser))
             {
@@ -89,7 +89,7 @@ namespace Bank_gruppprojekt
 
             if (newUser != null)
             {
-                Customer.AddUser(newUser); 
+                Customer.AddUser(newUser);
                 Console.WriteLine($"User created successfully: {newUser.Username}, PIN: {newUser.Pin}");
             }
             else
@@ -120,12 +120,79 @@ namespace Bank_gruppprojekt
             return newUser;
         }
 
+        public void AdminDeleteAccount(Administrator currentAdmin)
+        {
+            Console.Write("Enter the username of the user whose account you want to delete: ");
+            string targetUsername = Console.ReadLine();
+            Customer targetUser = Customer.GetCustomerWithAccounts().FirstOrDefault(u => u.Username.Equals(targetUsername, StringComparison.OrdinalIgnoreCase));
 
+            if (targetUser != null)
+            {
+                Console.WriteLine($"Accounts for user '{targetUsername}':");
+                for (int i = 0; i < targetUser.Accounts.Count; i++)
+                {
+                    var account = targetUser.Accounts[i];
+                    Console.WriteLine($"{i + 1}. {account.Accounttype} - Balance: {account.Balance} {account.Currency}");
+                }
+
+                Console.Write("Enter the number of the account you want to delete: ");
+                if (int.TryParse(Console.ReadLine(), out int selectedIndex) && selectedIndex > 0 && selectedIndex <= targetUser.Accounts.Count)
+                {
+                    string accountNameToDelete = targetUser.Accounts[selectedIndex - 1].Accounttype;
+                    AdminDeleteAccount(targetUser, accountNameToDelete, currentAdmin);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid index.");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"User '{targetUsername}' not found.");
+            }
+        }
+
+
+
+
+        private void AdminDeleteAccount(Customer user, string accountName, Administrator currentAdmin)
+        {
+            if (user == null || !Administrators.Contains(currentAdmin))
+            {
+                Console.WriteLine("Insufficient privileges. Only admins can delete accounts.");
+                return;
+            }
+
+            Customer targetUser = Customer.GetCustomerWithAccounts().FirstOrDefault(u => u.Username.Equals(user.Username, StringComparison.OrdinalIgnoreCase));
+
+            if (targetUser == null)
+            {
+                Console.WriteLine($"User '{user.Username}' not found.");
+                return;
+            }
+
+            Account targetAccount = targetUser.Accounts.FirstOrDefault(a => a.Accounttype.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+
+            if (targetAccount == null)
+            {
+                Console.WriteLine($"Account '{accountName}' not found for user '{user.Username}'.");
+                return;
+            }
+
+            if (targetAccount.Balance != 0)
+            {
+                Console.WriteLine($"Cannot delete account '{accountName}' for user '{user.Username}' because its not empty.");
+                return;
+            }
+
+            targetUser.Accounts.Remove(targetAccount);
+            Console.WriteLine($"Account '{accountName}' deleted successfully for user '{user.Username}'.");
+        }
 
         public static void Menu(Administrator currentAdmin)
         {
 
-            Console.Clear();            
+            Console.Clear();
             int option = 0;
 
             do
@@ -141,6 +208,9 @@ namespace Bank_gruppprojekt
                                 currentAdmin.AdminCreateUser(currentAdmin);
                                 break;
                             case 2:
+                                currentAdmin.AdminDeleteAccount(currentAdmin);
+                                break;
+                            case 3:
                                 Console.WriteLine("\u001b[31mExiting...\u001b[0m");
                                 break;
                             default:
@@ -151,8 +221,6 @@ namespace Bank_gruppprojekt
                         Console.WriteLine("Press enter to exit to Main Menu");
                         Console.ReadLine();
                         Console.Clear();
-                        AviciiBank art = new AviciiBank();
-                        art.PaintBank();
                     }
                     else
                     {
@@ -163,7 +231,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 2);
+            } while (option != 3);
         }
 
         public static void PrintOptions(Administrator currentAdmin)
@@ -173,17 +241,18 @@ namespace Bank_gruppprojekt
             Console.WriteLine("║        Administrator Menu        ║");
             Console.WriteLine("╠══════════════════════════════════╣");
             Console.WriteLine("║ 1. Create User                   ║");
-            Console.WriteLine("║ 2. Exit                          ║");
+            Console.WriteLine("║ 2. Delete User                   ║");
+            Console.WriteLine("║ 3. Exit                          ║");
             Console.WriteLine("╚══════════════════════════════════╝");
         }
 
         public static Administrator AuthenticateAdministrator(string username, string pin)
         {
-            
+
 
             if (int.TryParse(pin, out int pinValue))
             {
-                
+
 
                 Administrator authenticatedAdministrator = Administrators.FirstOrDefault(u => u.Username.Trim().Equals(username, StringComparison.OrdinalIgnoreCase) && u.Pin.ToString() == pin);
 
@@ -194,7 +263,7 @@ namespace Bank_gruppprojekt
                 return authenticatedAdministrator;
             }
             else
-            {                
+            {
                 return null;
             }
         }

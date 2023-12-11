@@ -112,6 +112,15 @@ namespace Bank_gruppprojekt
             }
         }
 
+        public void DisplayAccountsNoPara(Customer customer)
+        {
+            Console.WriteLine("Accounts:");
+            for (int i = 0; i < customer.Accounts.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. [{customer.Accounts[i].Accounttype}] ");
+            }
+        }
+
 
         public static void Withdraw(Customer currentCustomer)
         {
@@ -413,7 +422,7 @@ namespace Bank_gruppprojekt
                         else
                         {
                             Console.WriteLine("Which account do you want to transfer money to?");
-                            currentCustomer.DisplayAccounts(receiver);
+                            currentCustomer.DisplayAccountsNoPara(receiver);
 
                             if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {

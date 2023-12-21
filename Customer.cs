@@ -624,6 +624,10 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid account selection.");
             }
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
             return -1;
         }
 
@@ -684,6 +688,10 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("You have no outstanding loans to repay.");
             }
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
         }
 
         public double GetMaxLoanAmount(int accountIndex)

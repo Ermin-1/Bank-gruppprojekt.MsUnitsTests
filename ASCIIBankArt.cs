@@ -20,7 +20,7 @@ namespace Bank_gruppprojekt
             "         _._._                       _._._",
             "        _|   |_                     _|   |_",
             "        | ... |_._._._._._._._._._._| ... |",
-            "        | ||| |  o THE MEGA BANK o  | ||| |", 
+            "        | ||| | o THE AVICII BANK o | ||| |", 
             "        | \"\"\" |  \"\"\"    \"\"\"    \"\"\"  | \"\"\" |",
             "   ())  |[-|-]| [-|-]  [-|-]  [-|-] |[-|-]|  ())",
             "  (())) |     |---------------------|     | (()))",
@@ -40,7 +40,7 @@ namespace Bank_gruppprojekt
                         .Replace("~", "\u001b[32m~\u001b[0m")
                         .Replace("^", "\u001b[32m^\u001b[0m")
                         .Replace("(", "\u001b[32m(\u001b[0m")
-                        .Replace("THE MEGA BANK", "\u001b[36mTHE MEGA BANK\u001b[0m");
+                        .Replace("THE AVICII BANK", "\u001b[36mTHE AVICII BANK\u001b[0m");
                     Console.WriteLine(coloredLine);
                     Thread.Sleep(75);
                 }                                      

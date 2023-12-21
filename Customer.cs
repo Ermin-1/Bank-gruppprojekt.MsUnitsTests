@@ -273,7 +273,7 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-            } while (option != 8);
+            } while (option != 9);
         }
 
         public static void AddNewAccount(Customer currentCustomer)
@@ -394,7 +394,14 @@ namespace Bank_gruppprojekt
                                     currentCustomer.LogTransferToOwnAccounts(convertedAmount, targetCurrency, currentCustomer.Accounts[fromAccountIndex - 1], currentCustomer.Accounts[toAccountIndex - 1]);
 
                                     Console.WriteLine($"Transfer successful. New balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
-                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");                                 
+                                    Console.WriteLine($"New balance for {currentCustomer.Accounts[toAccountIndex - 1].Accounttype} account is {currentCustomer.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");
+
+                                    Console.WriteLine("");
+                                    Console.WriteLine("Press enter to exit to Menu");
+                                    Console.ReadLine();
+                                    Console.Clear();
+
+
                                 }
                             }
                             else
@@ -450,7 +457,7 @@ namespace Bank_gruppprojekt
                         else
                         {
                             Console.WriteLine("Which account do you want to transfer money to?");
-                            currentCustomer.DisplayAccountsNoPara(receiver);
+                            currentCustomer.DisplayAccounts(receiver);
 
                             if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {
@@ -480,14 +487,21 @@ namespace Bank_gruppprojekt
                                     // Perform the transfer
                                     currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                     Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
-                                        $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}." +
-                                        $"\nThe receiver will be able to see the transfer of funds in approximately 15 minutes.");
-                                    await Task.Delay(1 * 5 * 1000); // 15 min
+                                        $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
 
-                                    receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;
-
-                                    //currentCustomer.LogTransferWitdrawl(transferAmount, sourceCurrency, currentCustomer.Accounts[fromAccountIndex - 1], receiver.Accounts[toAccountIndex - 1]);
                                     currentCustomer.LogTransferToAnotherUser(convertedAmount, targetCurrency, currentCustomer.Accounts[fromAccountIndex - 1], receiver.Accounts[toAccountIndex - 1], receiver);
+
+                                    Console.WriteLine("");
+                                    Console.WriteLine("Press enter to exit to Menu");
+                                    Console.ReadLine();
+                                    Console.Clear();
+
+                                    await Task.Delay(15 * 60 * 1000); // 15 min
+                                    receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;                                   
+
+                                    Console.WriteLine($"Transaction successful. New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is " +
+                                        $"{receiver.Accounts[toAccountIndex - 1].Balance} {targetCurrency}");
+
                                 }
                                 else
                                 {
@@ -727,6 +741,10 @@ namespace Bank_gruppprojekt
                 {
                     Console.WriteLine(logboi);
                 }
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
         }
 
             public List<string> GetLog()

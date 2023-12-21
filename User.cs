@@ -95,15 +95,20 @@ namespace Bank_gruppprojekt
             do
             {
                 key = Console.ReadKey(true);
- 
-                if (!char.IsControl(key.KeyChar))
+
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password = password.Substring(0, password.Length - 1);
+                    Console.Write("\b \b"); 
+                }
+                else if (!char.IsControl(key.KeyChar))
                 {
                     password += key.KeyChar;
-                    Console.Write("*"); 
+                    Console.Write("*");
                 }
             } while (key.Key != ConsoleKey.Enter);
 
-            Console.WriteLine(); 
+            Console.WriteLine();
             return password;
         }
     }

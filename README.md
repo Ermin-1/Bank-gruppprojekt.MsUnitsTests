@@ -2,7 +2,7 @@
 
 ## Welcome to the Bank Group Project!
 
-This collaborative effort brings together the coding expertise of several contributors to develop a robust banking system simulation. Whether you're a customer looking to manage your accounts or an administrator overseeing the financial operations, this project has got you covered.
+Welcome to the Avicii Bank Group Project! This collaborative effort brings together the coding expertise of several contributors to develop a robust banking system simulation. Whether you're a customer looking to manage your accounts or an administrator overseeing the financial operations, this project has got you covered.
 
 ### Table of Contents
 - Introduction
@@ -14,16 +14,12 @@ This collaborative effort brings together the coding expertise of several contri
  - License
   
 ### Introduction
-In today's digital age, banking systems play a crucial role in facilitating financial transactions and providing users with a secure platform to manage their funds. The Bank Group Project aims to replicate key aspects of real-world banking, offering a comprehensive set of features for both customers and administrators.
+In today's digital age, banking systems play a crucial role in facilitating financial transactions and providing users with a secure platform to manage their funds. The Avicii Bank Group Project aims to replicate key aspects of real-world banking, offering a comprehensive set of features for both customers and administrators.
 
 ### Features
 **User Authentication**
-
-**Customers:** 
-Authenticate with a username and PIN.
-
-**Administrators:**
-Access administrative functionalities with specific credentials.
+Customers: Authenticate with a username and PIN.
+Administrators: Access administrative functionalities with specific credentials.
 
 **Customer Functionalities:**
 - Deposit: Add funds to accounts effortlessly.
@@ -41,7 +37,7 @@ Access administrative functionalities with specific credentials.
   
 **Usage**
 
-The Bank Group Project provides an interactive command-line interface for users. Both customers and administrators can navigate through intuitive menus to perform a wide range of banking operations. The system prompts users for necessary information such as usernames, PINs, and transaction details, ensuring a user-friendly experience.
+The Avicii Bank Group Project provides an interactive command-line interface for users. Both customers and administrators can navigate through intuitive menus to perform a wide range of banking operations. The system prompts users for necessary information such as usernames, PINs, and transaction details, ensuring a user-friendly experience.
 
 **Code Structure**
 

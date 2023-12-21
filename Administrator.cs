@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Administrator : User, ILogInServices
+    public class Administrator : User , IMenuServices
     {
         public const int MaxLoginAttempts = 3;
         public static double usdToSekRate = 10;

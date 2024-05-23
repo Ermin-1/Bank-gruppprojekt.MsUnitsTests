@@ -55,3 +55,7 @@ Manages account creation, loan requests, and transaction logging.
 
 **How to Run**
 - Clone the project repository to your local machine.
+
+
+**Testing**
+

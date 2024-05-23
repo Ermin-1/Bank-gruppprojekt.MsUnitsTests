@@ -58,10 +58,10 @@ Manages account creation, loan requests, and transaction logging.
 
 
 ## Testing
-Från detta projekt så har jag valt ut att identifierat  och testa, först och främst inloggningsdelen utav koden. Det är ju en ganska kritisk del i och med att det är det första "kunden" möts utav så den bör fungera helt felfritt. Att inloggningsdelen i koden faktiskt autentisierar vem som loggar in, om den är admin eller an vanlig user är väldigt viktigt.
+Från detta projekt så har jag valt ut att identifierat  och testa, först och främst **inloggningsdelen** utav koden. Det är ju en ganska kritisk del i och med att det är det första "kunden" möts utav så den bör fungera helt felfritt. Att inloggningsdelen i koden faktiskt autentisierar vem som loggar in, om den är admin eller an vanlig user är väldigt viktigt.
 Man vill inte att en vanlig user ska komma åt "adminsidan". 
-Jag har också valt att testa uttag och insättning utav pengar. Här är det viktigt att pengarna dras och sätts in på och ifrån rätt konto, att det verkligen är den inloggade userns konton man kommer åt. 
-Näst så vill jag också testa överföringar av pengar mellan konton, både mellan användarens egna konton (om den har flera) men också mellan olika användares konton. 
+Jag har också valt att testa **uttag och insättning utav pengar**. Här är det viktigt att pengarna dras och sätts in på och ifrån rätt konto, att det verkligen är den inloggade userns konton man kommer åt. 
+Näst så vill jag också testa **överföringar av pengar** mellan konton, både mellan användarens egna konton (om den har flera) men också mellan olika användares konton. 
 
 
 

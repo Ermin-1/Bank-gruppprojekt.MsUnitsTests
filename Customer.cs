@@ -99,7 +99,7 @@ namespace Bank_gruppprojekt
             }
             Console.WriteLine("\nPress enter to exit to Menu");
             Console.ReadLine();
-            Console.Clear();
+            //Console.Clear();
         }
         public void CreateAccount(string accountType, double initialBalance, string currency)
         {            
@@ -162,7 +162,7 @@ namespace Bank_gruppprojekt
             }
             Console.WriteLine("\nPress enter to exit to Menu");
             Console.ReadLine();
-            Console.Clear();
+            //Console.Clear();
         }
 
         public static void ShowBalance(Customer currentCustomer)

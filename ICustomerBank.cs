@@ -9,7 +9,7 @@ namespace Bank_gruppprojekt
     public interface ICustomerBank 
     {
 
-        public static void Deposit(Customer currentUser, ILog log)
+        public static void Deposit(Customer currentUser)
         {
         }
 
@@ -39,7 +39,7 @@ namespace Bank_gruppprojekt
         public static void DisplayUsers(List<Customer> users)
         {
         }
-        public static void PrintLogBois(ILog log)
+        public static void PrintLogBois()
         {
         }
     }

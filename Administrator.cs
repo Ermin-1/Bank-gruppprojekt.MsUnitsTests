@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bank_gruppprojekt
 {
-    public class Administrator : User, ILogInServices
+    public class Administrator : User , IMenuServices
     {
         public const int MaxLoginAttempts = 3;
         public static double usdToSekRate = 10;
@@ -66,12 +66,7 @@ namespace Bank_gruppprojekt
         }
         public void AdminCreateUser(Administrator adminUser)
         {
-            if (adminUser == null || !Administrators.Contains(adminUser))
-            {
-                Console.WriteLine("Insufficient privileges. Only admins can create users.");
-                return;
-            }
-
+            Console.Clear();           
             Console.WriteLine("Admin Console - Create New User");
             Console.WriteLine("-------------------------------");
 
@@ -81,8 +76,13 @@ namespace Bank_gruppprojekt
             string pin = Console.ReadLine();
             if (pin.Length != 4 || !int.TryParse(pin, out _))
             {
-                Console.WriteLine("Invalid PIN format. Please enter a valid four-digit PIN.");
-                return;
+                Console.WriteLine("\u001b[31mInvalid PIN format. Please enter a valid four-digit PIN.\u001b[0m");
+                Console.WriteLine();
+            }
+            if (username.Length != 2 && username.Count(char.IsLetter) < 2)
+            {
+                Console.WriteLine("\u001b[31mInvalid Username format. Username must be atleast 2 letters.\u001b[0m");
+                Console.WriteLine();
             }
 
             Customer newUser = CreateUser(username, pin);
@@ -94,9 +94,11 @@ namespace Bank_gruppprojekt
             }
             else
             {
-                Console.WriteLine("User creation failed. Please check the input and try again.");
+                Console.WriteLine("\u001b[31mUser creation failed. Please check the input and try again.\u001b[0m");
             }
-            Thread.Sleep(3000);
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
             Console.Clear();
         }
 
@@ -124,6 +126,7 @@ namespace Bank_gruppprojekt
 
         public void AdminDeleteAccount(Administrator currentAdmin)
         {
+            Console.Clear();
             Console.Write("Enter the username of the user whose account you want to delete: ");
             string targetUsername = Console.ReadLine();
             Customer targetUser = Customer.GetCustomerWithAccounts().FirstOrDefault(u => u.Username.Equals(targetUsername, StringComparison.OrdinalIgnoreCase));
@@ -134,7 +137,7 @@ namespace Bank_gruppprojekt
                 for (int i = 0; i < targetUser.Accounts.Count; i++)
                 {
                     var account = targetUser.Accounts[i];
-                    Console.WriteLine($"{i + 1}. {account.Accounttype} - Balance: {account.Balance} {account.Currency}");
+                    Console.WriteLine($"{i + 1}. [{account.Accounttype}] {account.Balance} {account.Currency}");
                 }
 
                 Console.Write("Enter the number of the account you want to delete: ");
@@ -152,7 +155,9 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine($"User '{targetUsername}' not found.");
             }
-            Thread.Sleep(3000);
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
             Console.Clear();
         }
 
@@ -233,7 +238,9 @@ namespace Bank_gruppprojekt
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                        Console.WriteLine("Invalid input. Please enter a number between 1, 2 or 3.");
+                        Thread.Sleep(2000);
+                        Console.Clear();
                     }
                 }
                 catch (Exception ex)

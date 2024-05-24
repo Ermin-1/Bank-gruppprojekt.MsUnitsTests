@@ -8,19 +8,17 @@ namespace Bank_gruppprojekt
 {
     public class Account
     {
-        private readonly ILog Log;
-
+       
         public string Accounttype { get; set; }
         public double Balance { get; set; }
         public string Currency { get; set; }
         public double IntrestRate { get; set; } 
 
 
-        public Account(string accountType, double balance, string currency, ILog log = null)
+        public Account(string accountType, double balance, string currency)
         {
             Accounttype = accountType;
-            Balance = balance;
-            Log = log;
+            Balance = balance;            
             Currency = currency;
         }
 

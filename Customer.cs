@@ -11,7 +11,7 @@ using System.Transactions;
 
 namespace Bank_gruppprojekt
 {
-    public class Customer : User, ICustomerBank, IMenuServices, ILogInServices, ILog
+    public class Customer : User, ICustomerBank, IMenuServices
     {
         public const int MaxLoginAttempts = 3;
         public List<Account> Accounts { get; set; }
@@ -355,19 +355,19 @@ namespace Bank_gruppprojekt
 
                     if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= currentCustomer.Accounts.Count)
                     {
-                        // Check if the source and destination accounts are the same
+                        
                         if (fromAccountIndex != toAccountIndex)
                         {
-                            // Get the currencies of the source and destination accounts
+                            
                             string sourceCurrency = currentCustomer.Accounts[fromAccountIndex - 1].Currency;
                             string targetCurrency = currentCustomer.Accounts[toAccountIndex - 1].Currency;
 
-                            // Check if the source and destination accounts have valid currencies
+                            
                             if ((sourceCurrency == "SEK" || sourceCurrency == "USD") && (targetCurrency == "SEK" || targetCurrency == "USD"))
                             {
-                                double convertedAmount = transferAmount; // Initialize converted amount
+                                double convertedAmount = transferAmount; 
 
-                                // Check if currency conversion is needed
+                               
                                 if (sourceCurrency != targetCurrency)
                                 {
                                     double sourceToTargetRate = Administrator.GetExchangeRate(sourceCurrency, targetCurrency);
@@ -461,15 +461,15 @@ namespace Bank_gruppprojekt
 
                             if (int.TryParse(Console.ReadLine(), out int toAccountIndex) && toAccountIndex > 0 && toAccountIndex <= receiver.Accounts.Count)
                             {
-                                // Check if the source and destination accounts have valid currencies
+                                
                                 string sourceCurrency = currentCustomer.Accounts[fromAccountIndex - 1].Currency;
                                 string targetCurrency = receiver.Accounts[toAccountIndex - 1].Currency;
 
                                 if ((sourceCurrency == "SEK" || sourceCurrency == "USD") && (targetCurrency == "SEK" || targetCurrency == "USD"))
                                 {
-                                    double convertedAmount = transferAmount; // Initialize converted amount
+                                    double convertedAmount = transferAmount; 
 
-                                    // Check if currency conversion is needed
+                                    
                                     if (sourceCurrency != targetCurrency)
                                     {
                                         double sourceToTargetRate = Administrator.GetExchangeRate(sourceCurrency, targetCurrency);
@@ -484,7 +484,7 @@ namespace Bank_gruppprojekt
                                         convertedAmount = transferAmount * sourceToTargetRate;
                                     }
 
-                                    // Perform the transfer
+                                    
                                     currentCustomer.Accounts[fromAccountIndex - 1].Balance -= transferAmount;
                                     Console.WriteLine($"Thank you for the transfer. Your new balance for {currentCustomer.Accounts[fromAccountIndex - 1].Accounttype} " +
                                         $"account is {currentCustomer.Accounts[fromAccountIndex - 1].Balance} {sourceCurrency}");
@@ -496,7 +496,7 @@ namespace Bank_gruppprojekt
                                     Console.ReadLine();
                                     Console.Clear();
 
-                                    await Task.Delay(15 * 60 * 1000); // 15 min
+                                    await Task.Delay(15 * 60 * 1000); 
                                     receiver.Accounts[toAccountIndex - 1].Balance += convertedAmount;                                   
 
                                     Console.WriteLine($"Transaction successful. New balance for {receiver.Accounts[toAccountIndex - 1].Accounttype} account is " +
@@ -624,6 +624,10 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("Invalid account selection.");
             }
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
             return -1;
         }
 
@@ -684,6 +688,10 @@ namespace Bank_gruppprojekt
             {
                 Console.WriteLine("You have no outstanding loans to repay.");
             }
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to exit to Menu");
+            Console.ReadLine();
+            Console.Clear();
         }
 
         public double GetMaxLoanAmount(int accountIndex)

@@ -12,11 +12,11 @@ namespace Bank_gruppprojekt
         {
         }
 
-        public static void Menu (User currentUser, ILog log, List<Customer> allUsers)
+        public static void Menu (User currentUser, List<Customer> allUsers)
         {         
         }
 
-        public static void LoginIn(ILog log, List<User> allUsers)
+        public static void LoginIn(List<User> allUsers)
         {          
         }
     }
